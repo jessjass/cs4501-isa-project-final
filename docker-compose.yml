@@ -1,0 +1,10 @@
+models:
+    image: tp33/django
+    container_name: models
+    external_links:
+      -  mysql:db
+    volumes:
+      -  app/models:/app
+    ports:
+      - "8001:8000"
+    command: bash -c "python manage.py makemigrations events && python manage.py migrate && python manage.py loaddata database.json && mod_wsgi-express start-server --working-directory ./ --reload-on-changes ./isa_project/wsgi.py"
