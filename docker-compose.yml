@@ -3,8 +3,8 @@ models:
     container_name: models
     external_links:
       -  mysql:db
-    volumes:
-      -  app/models:/app
     ports:
       - "8001:8000"
-    command: bash -c "python manage.py makemigrations events && python manage.py migrate && python manage.py loaddata database.json && mod_wsgi-express start-server --working-directory ./ --reload-on-changes ./isa_project/wsgi.py"
+    volumes:
+      -  ./app/models:/app
+    command: bash -c "python manage.py makemigrations services && python manage.py migrate && python manage.py loaddata database.json && mod_wsgi-express start-server --working-directory ./ --reload-on-changes ./models/wsgi.py"

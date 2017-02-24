@@ -1,0 +1,98 @@
+[
+{
+    "model": "services.experience",
+    "pk": 1,
+    "fields": {
+        "title": "Friday Fun",
+        "description": "lunch and a movie",
+        "totalPrice": "20.00"
+    }
+},
+{
+    "model": "services.experience",
+    "pk": 2,
+    "fields": {
+        "title": "Weekend adventure",
+        "description": "Hiking then breweries",
+        "totalPrice": "20.00"
+    }
+},
+{
+    "model": "services.event",
+    "pk": 1,
+    "fields": {
+        "datetime": "2017-03-01T12:00:00Z",
+        "price": "10.00",
+        "title": "lunch at citizen burger",
+        "description": "food before the movie",
+        "experience": 1
+    }
+},
+{
+    "model": "services.event",
+    "pk": 2,
+    "fields": {
+        "datetime": "2017-03-01T14:00:00Z",
+        "price": "10.00",
+        "title": "Movie downtown",
+        "description": "La La Land",
+        "experience": 1
+    }
+},
+{
+    "model": "services.event",
+    "pk": 3,
+    "fields": {
+        "datetime": "2017-03-02T14:00:00Z",
+        "price": "0.00",
+        "title": "Hiking wintergreen",
+        "description": "great views",
+        "experience": 2
+    }
+},
+{
+    "model": "services.event",
+    "pk": 4,
+    "fields": {
+        "datetime": "2017-03-02T16:00:00Z",
+        "price": "20.00",
+        "title": "Breweries",
+        "description": "DB or Blue mountain or Bold rock",
+        "experience": 2
+    }
+},
+{
+    "model": "services.user",
+    "pk": 1,
+    "fields": {
+        "firstName": "Bob",
+        "lastName": "Builder",
+        "username": "bob",
+        "password": "bob",
+        "eventsIn": [
+            1,
+            2
+        ],
+        "experienceIn": [
+            1
+        ]
+    }
+},
+{
+    "model": "services.user",
+    "pk": 2,
+    "fields": {
+        "firstName": "Joe",
+        "lastName": "Doe",
+        "username": "joe",
+        "password": "joe",
+        "eventsIn": [
+            3,
+            4
+        ],
+        "experienceIn": [
+            2
+        ]
+    }
+}
+]
