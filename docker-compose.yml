@@ -18,7 +18,7 @@ exp:
       - "8002:8000"
    volumes:
       - ./app/exp:/app
-   command: "mod_wsgi-express start-server --working-directory ./ --reload-on-changes ./exp/wsgi.py"
+   command: bash -c "mod_wsgi-express start-server --working-directory ./ --reload-on-changes ./exp/wsgi.py"
 
 web:
    image: tp33/django
@@ -29,4 +29,4 @@ web:
       - "8000:8000"
    volumes:
       - ./app/web:/app
-   command: "mod_wsgi-express start-server --url-alias /static static --working-directory ./ --reload-on-changes ./web/wsgi.py"
+   command: bash -c "python manage.py collectstatic <<<yes && mod_wsgi-express start-server --url-alias /static static --working-directory ./ --reload-on-changes ./web/wsgi.py"
