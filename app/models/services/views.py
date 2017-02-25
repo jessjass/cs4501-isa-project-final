@@ -169,7 +169,7 @@ def experienceAll(request):
 
 
 # "/experience/<experience_id>/" : experience by id via GET or experience update via POST
-def experienceById(request, experience_id):
+def experienceById(request, exp_id):
 
 	experience = Experience.objects.filter(pk = experience_id)
 
