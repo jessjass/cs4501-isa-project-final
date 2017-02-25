@@ -1,1 +1,4 @@
+*.pyc
+*.pyo
 db
+app/models/services/migrations/*
