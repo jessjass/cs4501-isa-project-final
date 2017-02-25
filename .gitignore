@@ -2,3 +2,11 @@
 *.pyo
 db
 app/models/services/migrations/*
+app/models/models__pycache__
+app/models/services/__pycache__
+app/exp/exp/__pycache__
+app/exp/services/__pycache__
+app/web/web/__pycache__
+app/web/pages/__pycache__
+app/web/static/admin
+app/models/static/admin
