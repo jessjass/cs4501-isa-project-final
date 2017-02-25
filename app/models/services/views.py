@@ -3,7 +3,7 @@ from django.core import serializers
 import json
 
 from .models import Event, Experience, User
-from .forms import EventForm, ExperienceForm, UserFormCreate, UserFormUpdateEvent, UserFormUpdateExperience
+from .forms import EventForm, ExperienceForm, UserFormCreate, UserFormUpdateUser, UserFormUpdateExperience, UserFormUpdateEvent,UserFormUpdateFriend
 
 # "/" : entry point to Event API
 def index(request):
@@ -287,7 +287,7 @@ def userById(request, user_id):
 
 		if request.method == 'POST':
 
-			form = UserFormUpdateEvent(request.POST)
+			form = UserFormUpdateUser(request.POST)
 
 			if form.is_valid():
 				e = User.objects.get(pk = user_id)
@@ -296,7 +296,6 @@ def userById(request, user_id):
 				e.lastName = form.cleaned_data['lastName']
 				e.username = form.cleaned_data['username']
 				e.password = form.cleaned_data['password'] 
-				e.eventsIn.add(form.cleaned_data['event_id'])
 				e.save()
 
 				response_data = {}
@@ -335,21 +334,141 @@ def addExpUserById(request, user_id):
 
 			if form.is_valid():
 				e = User.objects.get(pk = user_id)
-				e.experienceIn.add(form.cleaned_data['exp_id'])
+				
+				if(form.cleaned_data['remove'] == "TRUE"):
+					e.experienceIn.remove(form.cleaned_data['exp_id'])
 
-				expId = form.cleaned_data['exp_id']
-				listEvents = Event.objects.filter(experience = expId)
+					expId = form.cleaned_data['exp_id']
+					listEvents = Event.objects.filter(experience = expId)
 
-				for singleEvent in listEvents:
-					e.eventsIn.add(singleEvent.pk)
-				e.save()
+					for singleEvent in listEvents:
+						e.eventsIn.remove(singleEvent.pk)
+					e.save()
 
+					response_data = {}
+					response_data['result'] = '200'
+					response_data['message'] = 'OK: Successful'
+					response_data['old'] = json.loads(serializers.serialize("json", user))
+					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
+					return JsonResponse(response_data, safe = False)
+				else:
+					e.experienceIn.add(form.cleaned_data['exp_id'])
+
+					expId = form.cleaned_data['exp_id']
+					listEvents = Event.objects.filter(experience = expId)
+
+					for singleEvent in listEvents:
+						e.eventsIn.add(singleEvent.pk)
+					e.save()
+
+					response_data = {}
+					response_data['result'] = '200'
+					response_data['message'] = 'OK: Successful'
+					response_data['old'] = json.loads(serializers.serialize("json", user))
+					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
+					return JsonResponse(response_data, safe = False)
+				
+			else:
 				response_data = {}
-				response_data['result'] = '200'
-				response_data['message'] = 'OK: Successful'
-				response_data['old'] = json.loads(serializers.serialize("json", user))
-				response_data['user'] = json.loads(serializers.serialize("json", [e,]))
+				response_data['result'] = '400'
+				response_data['message'] = 'Bad Request'
 				return JsonResponse(response_data, safe = False)
+
+def addEventUserById(request, user_id):
+	user = User.objects.filter(pk = user_id)
+
+	if not user:
+
+		response_data = {}
+		response_data['result'] = '404'
+		response_data['message'] = 'Not Found: user not found'
+		return JsonResponse(response_data, safe=False)
+
+	else:
+
+		if request.method == 'GET':
+
+				data = serializers.serialize("json", user)
+				return JsonResponse(json.loads(data), safe=False)
+
+		if request.method == 'POST':
+
+			form = UserFormUpdateEvent(request.POST)
+
+			if form.is_valid():
+				e = User.objects.get(pk = user_id)
+				user = User.objects.filter(pk = user_id)
+
+				if(form.cleaned_data['remove'] == "TRUE"):
+					e.eventsIn.remove(form.cleaned_data['event_id'])
+					e.save()
+
+					response_data = {}
+					response_data['result'] = '200'
+					response_data['message'] = 'OK: Successful'
+					response_data['old'] = json.loads(serializers.serialize("json", user))
+					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
+					return JsonResponse(response_data, safe = False)
+				else:
+					e.eventsIn.add(form.cleaned_data['event_id'])
+					e.save()
+
+					response_data = {}
+					response_data['result'] = '200'
+					response_data['message'] = 'OK: Successful'
+					response_data['old'] = json.loads(serializers.serialize("json", user))
+					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
+					return JsonResponse(response_data, safe = False)
+
+			else:
+				response_data = {}
+				response_data['result'] = '400'
+				response_data['message'] = 'Bad Request'
+				return JsonResponse(response_data, safe = False)
+
+
+def addFriendUserById(request, user_id):
+	user = User.objects.filter(pk = user_id)
+
+	if not user:
+
+		response_data = {}
+		response_data['result'] = '404'
+		response_data['message'] = 'Not Found: user not found'
+		return JsonResponse(response_data, safe=False)
+
+	else:
+
+		if request.method == 'GET':
+
+				data = serializers.serialize("json", user)
+				return JsonResponse(json.loads(data), safe=False)
+
+		if request.method == 'POST':
+
+			form = UserFormUpdateFriend(request.POST)
+
+			if form.is_valid():
+				e = User.objects.get(pk = user_id)
+				if(form.cleaned_data['remove'] == "TRUE"):
+					e.friends.remove(form.cleaned_data['user_id'])
+					e.save()
+					response_data = {}
+					response_data['result'] = '200'
+					response_data['message'] = 'OK: Successful'
+					response_data['old'] = json.loads(serializers.serialize("json", user))
+					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
+					return JsonResponse(response_data, safe = False)
+				else:
+					e.friends.add(form.cleaned_data['user_id'])
+					e.save()
+
+					response_data = {}
+					response_data['result'] = '200'
+					response_data['message'] = 'OK: Successful'
+					response_data['old'] = json.loads(serializers.serialize("json", user))
+					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
+					return JsonResponse(response_data, safe = False)
 
 			else:
 				response_data = {}

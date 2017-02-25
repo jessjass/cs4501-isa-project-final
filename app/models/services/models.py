@@ -24,5 +24,6 @@ class User(models.Model):
 	password = models.CharField(max_length=50)
 	eventsIn = models.ManyToManyField(Event)
 	experienceIn = models.ManyToManyField(Experience)
+	friends = models.ManyToManyField("self")
 	def __str__(self):              # __unicode__ on Python 2
         	return self.firstName + " " + self.lastName
