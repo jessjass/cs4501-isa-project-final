@@ -13,7 +13,7 @@ exp:
    image: tp33/django
    container_name: exp
    links:
-      - models:models
+      - models
    ports:
       - "8002:8000"
    volumes:
@@ -24,7 +24,7 @@ web:
    image: tp33/django
    container_name: web
    links:
-      - exp:exp
+      - exp
    ports:
       - "8000:8000"
    volumes:

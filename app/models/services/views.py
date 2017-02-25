@@ -5,12 +5,12 @@ import json
 from .models import Event, Experience, User
 from .forms import EventForm, ExperienceForm, UserFormCreate, UserFormUpdateEvent, UserFormUpdateExperience
 
-# "/" : entry point to Event API
+# "/" : entry point to Models API
 def index(request):
 	response_data = {}
 	if request.method == 'GET':
 		response_data['result'] = '200'
-		response_data['message'] = "Successful: Entry point to the Event API."
+		response_data['message'] = "Successful: Entry point to the Models API."
 		return JsonResponse(response_data, safe=False)
 
 # "/events" : list of all events via GET or create an event via POST

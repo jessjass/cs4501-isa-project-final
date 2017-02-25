@@ -9,8 +9,9 @@ body {
 	box-sizing: border-box;
 	padding: 20px;
 	margin-bottom: 30px;
-    background: white url("../images/concert.jpg") no-repeat right bottom;
+    background-repeat: no-repeat;
     background-size: cover;
+    background-position: center bottom;
     height:300px;
     position: relative
 }

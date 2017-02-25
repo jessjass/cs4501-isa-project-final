@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
         "title": "Friday Fun",
-        "description": "lunch and a movie",
+        "description": "Lunch and a movie.",
         "totalPrice": "20.00"
     }
 },
@@ -12,8 +12,8 @@
     "model": "services.experience",
     "pk": 2,
     "fields": {
-        "title": "Weekend adventure",
-        "description": "Hiking then breweries",
+        "title": "Weekend Adventure",
+        "description": "Hiking then breweries.",
         "totalPrice": "20.00"
     }
 },
@@ -23,8 +23,8 @@
     "fields": {
         "datetime": "2017-03-01T12:00:00Z",
         "price": "10.00",
-        "title": "lunch at citizen burger",
-        "description": "food before the movie",
+        "title": "Lunch at Citizen Burger",
+        "description": "Grab a bite before the movie.",
         "experience": 1
     }
 },
@@ -34,7 +34,7 @@
     "fields": {
         "datetime": "2017-03-01T14:00:00Z",
         "price": "10.00",
-        "title": "Movie downtown",
+        "title": "Movie Downtown",
         "description": "La La Land",
         "experience": 1
     }
@@ -45,8 +45,8 @@
     "fields": {
         "datetime": "2017-03-02T14:00:00Z",
         "price": "0.00",
-        "title": "Hiking wintergreen",
-        "description": "great views",
+        "title": "Wintergreen Ski Resort",
+        "description": "Great views, great times.",
         "experience": 2
     }
 },
@@ -57,7 +57,7 @@
         "datetime": "2017-03-02T16:00:00Z",
         "price": "20.00",
         "title": "Breweries",
-        "description": "DB or Blue mountain or Bold rock",
+        "description": "DB or Blue Mountain or Bold Rock.",
         "experience": 2
     }
 },
