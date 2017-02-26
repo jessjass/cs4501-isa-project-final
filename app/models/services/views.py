@@ -88,28 +88,18 @@ def remove(request):
 
 	if request.method == 'POST':
 		event_id = request.POST["event_id"]
+		event = Event.objects.get(pk = event_id)
+		response_data = {}
 
-		if event_id == "ALL":
-			Event.objects.all().delete()
-			response_data = {}
+		if not event:
+			response_data['result'] = '404'
+			response_data['message'] = "Not Found: Event item not found"
+			return JsonResponse(response_data, safe = False)
+		else:
+			event.delete()
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
 			return JsonResponse(response_data, safe = False)
-		else:
-			event = Event.objects.filter(pk = event_id)	
-
-			if not event:
-				response_data = {}
-				response_data['result'] = '404'
-				response_data['message'] = "Not Found: Event item not found"
-				return JsonResponse(response_data, safe = False)
-
-			else:
-				event.delete()
-				response_data = {}
-				response_data['result'] = '200'
-				response_data['message'] = 'OK: Successful'
-				return JsonResponse(response_data, safe = False)
 
 # "/experience" : list of all experiences via GET or create an event via POST
 def experienceAll(request):
