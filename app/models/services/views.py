@@ -13,28 +13,19 @@ def index(request):
 		response_data['message'] = "Successful: Entry point to the Models API."
 		return JsonResponse(response_data, safe=False)
 
-# "/events" : list of all events via GET or create an event via POST
-def eventsAll(request):
+# "/event" : list of all events via GET or create an event via POST
+def eventAll(request):
 	events = Event.objects.all()
 
 	if request.method == 'GET':
-
 		data = serializers.serialize("json", events)
 		return JsonResponse(json.loads(data), safe=False)
 
 	if request.method == 'POST':
-
 		form = EventForm(request.POST)
 
 		if form.is_valid():
-
-			e = Event()
-			e.title = form.cleaned_data['title']
-			e.description = form.cleaned_data['description']
-			e.datetime = form.cleaned_data['datetime']
-			e.price = form.cleaned_data['price']
-			e.save()
-
+			e = form.save()
 			response_data = {}
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
@@ -46,15 +37,12 @@ def eventsAll(request):
 			response_data['message'] = 'Bad Request'
 			return JsonResponse(response_data, safe = False)
 
-
-# "/events/<event_id>/" : event by id via GET or event update via POST
+# "/event/<event_id>/" : event by id via GET or event update via POST
 def eventById(request, event_id):
-
-	event = Event.objects.filter(pk = event_id)
+	event = Event.objects.get(pk = event_id)
+	response_data = {}
 
 	if not event:
-
-		response_data = {}
 		response_data['result'] = '404'
 		response_data['message'] = 'Not Found: Event item not found'
 		return JsonResponse(response_data, safe=False)
@@ -62,35 +50,23 @@ def eventById(request, event_id):
 	else:
 
 		if request.method == 'GET':
-
-				data = serializers.serialize("json", event)
-				return JsonResponse(json.loads(data), safe=False)
+			data = serializers.serialize("json", [event,])
+			return JsonResponse(json.loads(data), safe=False)
 
 		if request.method == 'POST':
-
-			form = EventForm(request.POST)
+			form = EventForm(request.POST, instance=event)
 
 			if form.is_valid():
-				e = Event.objects.get(pk = event_id)
-
-				e.title = form.cleaned_data['title']
-				e.description = form.cleaned_data['description']
-				e.datetime = form.cleaned_data['datetime']
-				e.price = form.cleaned_data['price']
-				e.save()
-
-				response_data = {}
+				e = form.save()
 				response_data['result'] = '200'
 				response_data['message'] = 'OK: Successful'
-				response_data['old'] = json.loads(serializers.serialize("json", event))
+				response_data['old'] = json.loads(serializers.serialize("json", [event,]))
 				response_data['event'] = json.loads(serializers.serialize("json", [e,]))
 				return JsonResponse(response_data, safe = False)
 			else:
-				response_data = {}
 				response_data['result'] = '400'
 				response_data['message'] = 'Bad Request'
 				return JsonResponse(response_data, safe = False)
-
 
 def eventByExpId(request, exp_id):
 	event = Event.objects.filter(experience = exp_id)
@@ -102,6 +78,7 @@ def eventByExpId(request, exp_id):
 		return JsonResponse(response_data, safe=False)
 
 	else:
+
 		if request.method == 'GET':
 			data = serializers.serialize("json", event)
 			return JsonResponse(json.loads(data), safe=False)
@@ -110,15 +87,14 @@ def eventByExpId(request, exp_id):
 def remove(request):
 
 	if request.method == 'POST':
-
 		event_id = request.POST["event_id"]
+
 		if event_id == "ALL":
 			Event.objects.all().delete()
 			response_data = {}
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
 			return JsonResponse(response_data, safe = False)
-
 		else:
 			event = Event.objects.filter(pk = event_id)	
 
@@ -140,22 +116,14 @@ def experienceAll(request):
 	experiences = Experience.objects.all()
 
 	if request.method == 'GET':
-
 		data = serializers.serialize("json", experiences)
 		return JsonResponse(json.loads(data), safe=False)
 
 	if request.method == 'POST':
-
 		form = ExperienceForm(request.POST)
 
 		if form.is_valid():
-
-			e = Experience()
-			e.title = form.cleaned_data['title']
-			e.description = form.cleaned_data['description']
-			e.totalPrice = form.cleaned_data['totalPrice']
-			e.save()
-
+			e = form.save()
 			response_data = {}
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
@@ -167,14 +135,11 @@ def experienceAll(request):
 			response_data['message'] = 'Bad Request'
 			return JsonResponse(response_data, safe = False)
 
-
 # "/experience/<experience_id>/" : experience by id via GET or experience update via POST
 def experienceById(request, exp_id):
-
-	experience = Experience.objects.filter(pk = experience_id)
+	experience = Experience.objects.get(pk=exp_id)
 
 	if not experience:
-
 		response_data = {}
 		response_data['result'] = '404'
 		response_data['message'] = 'Not Found: Experience item not found'
@@ -183,42 +148,32 @@ def experienceById(request, exp_id):
 	else:
 
 		if request.method == 'GET':
-
-				data = serializers.serialize("json", experience)
-				return JsonResponse(json.loads(data), safe=False)
+			data = serializers.serialize("json", experience)
+			return JsonResponse(json.loads(data), safe=False)
 
 		if request.method == 'POST':
-
-			form = ExperienceForm(request.POST)
+			form = ExperienceForm(request.POST, instance=experience)
 
 			if form.is_valid():
-				e = Experience.objects.get(pk = experience_id)
-
-				e.title = form.cleaned_data['title']
-				e.description = form.cleaned_data['description']
-				e.totalPrice = form.cleaned_data['totalPrice']
-				e.save()
-
+				e = form.save()
 				response_data = {}
 				response_data['result'] = '200'
 				response_data['message'] = 'OK: Successful'
-				response_data['old'] = json.loads(serializers.serialize("json", experience))
+				response_data['old'] = json.loads(serializers.serialize("json", [experience,]))
 				response_data['experience'] = json.loads(serializers.serialize("json", [e,]))
-				return JsonResponse(response_data, safe = False)
+				return JsonResponse(response_data, safe=False)
 			else:
 				response_data = {}
 				response_data['result'] = '400'
 				response_data['message'] = 'Bad Request'
-				return JsonResponse(response_data, safe = False)
+				return JsonResponse(response_data, safe=False)
 
 
 # "/experience/remove/" : experience removal by experience_id (or ALL) via POST 
 def removeExperience(request):
 
 	if request.method == 'POST':
-
 		experience_id = request.POST['experience_id']
-	
 		experience = Experience.objects.filter(pk = experience_id)	
 
 		if not experience:
@@ -226,7 +181,6 @@ def removeExperience(request):
 			response_data['result'] = '404'
 			response_data['message'] = "Not Found: Experience item not found"
 			return JsonResponse(response_data, safe = False)
-
 		else:
 			experience.delete()
 			response_data = {}
@@ -238,16 +192,13 @@ def userAll(request):
 	user = User.objects.all()
 
 	if request.method == 'GET':
-
 		data = serializers.serialize("json", user)
 		return JsonResponse(json.loads(data), safe=False)
 
 	if request.method == 'POST':
-
 		form = UserFormCreate(request.POST)
 
 		if form.is_valid():
-
 			e = User()
 			e.firstName = form.cleaned_data['firstName']
 			e.lastName = form.cleaned_data['lastName']
@@ -260,7 +211,6 @@ def userAll(request):
 			response_data['message'] = 'OK: Successful'
 			response_data['user'] = json.loads(serializers.serialize("json", [e,]))
 			return JsonResponse(response_data, safe = False)
-
 		else:
 			response_data = {}
 			response_data['result'] = '400'
@@ -268,25 +218,20 @@ def userAll(request):
 			return JsonResponse(response_data, safe = False)
 
 def userById(request, user_id):
-
 	user = User.objects.filter(pk = user_id)
 
 	if not user:
-
 		response_data = {}
 		response_data['result'] = '404'
 		response_data['message'] = 'Not Found: user not found'
 		return JsonResponse(response_data, safe=False)
-
 	else:
 
 		if request.method == 'GET':
-
 				data = serializers.serialize("json", user)
 				return JsonResponse(json.loads(data), safe=False)
 
 		if request.method == 'POST':
-
 			form = UserFormUpdateUser(request.POST)
 
 			if form.is_valid():
@@ -315,7 +260,6 @@ def addExpUserById(request, user_id):
 	user = User.objects.filter(pk = user_id)
 
 	if not user:
-
 		response_data = {}
 		response_data['result'] = '404'
 		response_data['message'] = 'Not Found: user not found'
@@ -324,18 +268,16 @@ def addExpUserById(request, user_id):
 	else:
 
 		if request.method == 'GET':
-
-				data = serializers.serialize("json", user)
-				return JsonResponse(json.loads(data), safe=False)
+			data = serializers.serialize("json", user)
+			return JsonResponse(json.loads(data), safe=False)
 
 		if request.method == 'POST':
-
 			form = UserFormUpdateExperience(request.POST)
 
 			if form.is_valid():
 				e = User.objects.get(pk = user_id)
 				
-				if(form.cleaned_data['remove'] == "TRUE"):
+				if form.cleaned_data['remove'] == "TRUE":
 					e.experienceIn.remove(form.cleaned_data['exp_id'])
 
 					expId = form.cleaned_data['exp_id']

@@ -9,7 +9,7 @@ class Experience(models.Model):
 
 class Event(models.Model):
 
-	datetime = models.DateTimeField('date of event')
+	datetime = models.DateTimeField()
 	price = models.DecimalField(max_digits=6, decimal_places=2)
 	title = models.CharField(max_length=200)
 	description = models.CharField(max_length=400)
