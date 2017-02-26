@@ -1,5 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
+
 import json
 
 from .models import Event, Experience, User
@@ -15,9 +17,8 @@ def index(request):
 
 # "/event" : list of all events via GET or create an event via POST
 def eventAll(request):
-	# events = Event.objects.all()
 	events = Event.objects.filter(**request.GET.dict())
-	
+
 	if request.method == 'GET':
 		data = serializers.serialize("json", events)
 		return JsonResponse(json.loads(data), safe=False)
@@ -40,16 +41,15 @@ def eventAll(request):
 
 # "/event/<event_id>/" : event by id via GET or event update via POST
 def eventById(request, event_id):
-	event = Event.objects.get(pk = event_id)
 	response_data = {}
 
-	if not event:
+	try:
+		event = Event.objects.get(pk = event_id)
+	except ObjectDoesNotExist:
 		response_data['result'] = '404'
 		response_data['message'] = 'Not Found: Event item not found'
 		return JsonResponse(response_data, safe=False)
-
 	else:
-
 		if request.method == 'GET':
 			data = serializers.serialize("json", [event,])
 			return JsonResponse(json.loads(data), safe=False)
@@ -69,30 +69,30 @@ def eventById(request, event_id):
 				response_data['message'] = 'Bad Request'
 				return JsonResponse(response_data, safe = False)
 
-def eventByExpId(request, exp_id):
-	event = Event.objects.filter(experience = exp_id)
 
-	if not event:
-		response_data = {}
+def eventByExpId(request, exp_id):
+	response_data = {}
+	try:
+		event = Event.objects.filter(experience = exp_id)
+	except ObjectDoesNotExist:
 		response_data['result'] = '404'
 		response_data['message'] = 'Not Found: Event item not found'
 		return JsonResponse(response_data, safe=False)
-
 	else:
-
 		if request.method == 'GET':
 			data = serializers.serialize("json", event)
 			return JsonResponse(json.loads(data), safe=False)
 
+		
+
 # "/events/remove/" : event removal by event_id (or ALL) via POST 
 def remove(request):
-
+	response_data = {}
 	if request.method == 'POST':
 		event_id = request.POST["event_id"]
-		event = Event.objects.get(pk = event_id)
-		response_data = {}
-
-		if not event:
+		try:
+			event = Event.objects.get(pk = event_id)
+		except ObjectDoesNotExist:
 			response_data['result'] = '404'
 			response_data['message'] = "Not Found: Event item not found"
 			return JsonResponse(response_data, safe = False)
