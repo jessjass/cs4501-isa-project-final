@@ -15,8 +15,9 @@ def index(request):
 
 # "/event" : list of all events via GET or create an event via POST
 def eventAll(request):
-	events = Event.objects.all()
-
+	# events = Event.objects.all()
+	events = Event.objects.filter(**request.GET.dict())
+	
 	if request.method == 'GET':
 		data = serializers.serialize("json", events)
 		return JsonResponse(json.loads(data), safe=False)
