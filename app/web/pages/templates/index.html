@@ -29,50 +29,24 @@
     {% include "navbar.html" %}    
     <div class="container">
       <div class="row">
+      {% if experience_list %}
+      {% for experience in experience_list %}
         <div class="col-md-4">
-          <div class="tile" style="background-image: url('{% static 'images/concert.jpg'%}');">
+          {% with 'images/'|add:experience.fields.title|add:'.jpg' as static_image %}
+          <div class="tile" style="background-image: url('{% static static_image %}');">
             <div class="tile-description">
-              <h3>Tile 1</h3>
-              <p>Lorem ipsum dolor sit amet, per vocent oblique cu, meliore repudiare consequat mel ea.</p>
+              <h3>{{ experience.fields.title }}</h3>
+              <p>{{ experience.fields.description }}</p>
+              <p>${{ experience.fields.totalPrice }}</p>
             </div>
           </div>
+          {% endwith %}
         </div>
-        <div class="col-md-4">
-          <div class="tile" style="background-image: url('{% static 'images/concert.jpg'%}');">
-            <div class="tile-description">
-              <h3>Tile 2</h3>
-              <p>Lorem ipsum dolor sit amet, per vocent oblique cu, meliore repudiare consequat mel ea.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="tile" style="background-image: url('{% static 'images/concert.jpg'%}');">
-            <div class="tile-description">
-              <h3>Tile 3</h3>
-              <p>Lorem ipsum dolor sit amet, per vocent oblique cu, meliore repudiare consequat mel ea.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="tile" style="background-image: url('{% static 'images/concert.jpg'%}');">
-            <div class="tile-description">
-              <h3>Tile 4</h3>
-              <p>Lorem ipsum dolor sit amet, per vocent oblique cu, meliore repudiare consequat mel ea.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="tile" style="background-image: url('{% static 'images/concert.jpg'%}');">
-            <div class="tile-description">
-              <h3>Tile 5</h3>
-              <p>Lorem ipsum dolor sit amet, per vocent oblique cu, meliore repudiare consequat mel ea.</p>
-            </div>
-          </div>
-        </div>
+      {% endfor %}
+      {% endif %}
       </div>
     </div>
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

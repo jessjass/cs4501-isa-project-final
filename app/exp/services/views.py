@@ -14,6 +14,7 @@ def index(request):
 
 	if request.method == 'GET':
 		
+		# Get experiences from Models API
 		req = urllib.request.Request(models_api + '/api/v1/experience/')
 
 		try:
