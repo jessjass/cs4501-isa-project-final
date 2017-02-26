@@ -24,6 +24,7 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="https://use.fontawesome.com/c69eba006b.js"></script>
   </head>
   <body>
     {% include "navbar.html" %}    
@@ -31,8 +32,9 @@
       <div class="row">
       {% if experience_list %}
       {% for experience in experience_list %}
-        <div class="col-md-4">
+        <div class="col-md-6">
           {% with 'images/'|add:experience.fields.title|add:'.jpg' as static_image %}
+          <a> <!-- need to add links to detail page -->
           <div class="tile" style="background-image: url('{% static static_image %}');">
             <div class="tile-description">
               <h3>{{ experience.fields.title }}</h3>
@@ -40,6 +42,7 @@
               <p>${{ experience.fields.totalPrice }}</p>
             </div>
           </div>
+          </a>
           {% endwith %}
         </div>
       {% endfor %}

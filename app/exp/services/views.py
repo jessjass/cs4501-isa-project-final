@@ -33,7 +33,7 @@ def index(request):
 			resp = json.loads(resp_json)
 
 			response_data['result'] = "200"
-			response_data['message'] = "Successful"
+			response_data['message'] = "OK: Successful"
 			response_data['experience'] = resp
 		
 		return JsonResponse(response_data, safe=False)
