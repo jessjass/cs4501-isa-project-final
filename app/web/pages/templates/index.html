@@ -34,7 +34,7 @@
       {% for experience in experience_list %}
         <div class="col-md-6">
           {% with 'images/'|add:experience.fields.title|add:'.jpg' as static_image %}
-          <a href="{% url 'experienceDetail' experience.pk %}"> <!-- need to add links to detail page -->
+          <a href="{% url 'experienceDetail' experience.pk %}">
           <div class="tile" style="background-image: url('{% static static_image %}');">
             <div class="tile-description">
               <h3>{{ experience.fields.title }}</h3>

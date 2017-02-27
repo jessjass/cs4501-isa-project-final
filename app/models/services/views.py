@@ -139,7 +139,7 @@ def experienceById(request, exp_id):
 	else:
 
 		if request.method == 'GET':
-			data = serializers.serialize("json", experience)
+			data = serializers.serialize("json", [experience,])
 			return JsonResponse(json.loads(data), safe=False)
 
 		if request.method == 'POST':

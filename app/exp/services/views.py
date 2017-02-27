@@ -37,3 +37,33 @@ def index(request):
 			response_data['experience'] = resp
 		
 		return JsonResponse(response_data, safe=False)
+
+def experienceDetail(request, exp_id):
+	response_data = {}
+
+	if request.method == 'GET':
+		req = urllib.request.Request(models_api + '/api/v1/event/experience/' + exp_id + '/')
+
+		try:
+			resp_json = urllib.request.urlopen(req)
+		except URLError as e:
+			# URLError
+			if hasattr(e, 'reason'):
+				response_data['result'] = "400"
+				response_data['message'] = 'We failed to reach a server. Reason: ' + e.reason
+			# HTTPError
+			elif hasattr(e, 'code'):
+				response_data['result'] = e.code # error code
+				response_data['message'] = 'The server couldn\'t fulfill the request.'
+		else:
+			resp_json = resp_json.read().decode('utf-8')
+			resp = json.loads(resp_json)
+
+			response_data['result'] = "200"
+			response_data['message'] = "OK: Successful"
+			response_data['experience_events'] = resp
+		
+		return JsonResponse(response_data, safe=False)
+
+
+
