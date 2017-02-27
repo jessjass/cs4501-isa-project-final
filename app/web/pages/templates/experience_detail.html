@@ -30,23 +30,7 @@
     {% include "navbar.html" %}    
     <div class="container">
       <div class="row">
-      {% if experience_list %}
-      {% for experience in experience_list %}
-        <div class="col-md-6">
-          {% with 'images/'|add:experience.fields.title|add:'.jpg' as static_image %}
-          <a href="{% url 'experienceDetail' experience.pk %}"> <!-- need to add links to detail page -->
-          <div class="tile" style="background-image: url('{% static static_image %}');">
-            <div class="tile-description">
-              <h3>{{ experience.fields.title }}</h3>
-              <p>{{ experience.fields.description }}</p>
-              <p>${{ experience.fields.totalPrice }}</p>
-            </div>
-          </div>
-          </a>
-          {% endwith %}
-        </div>
-      {% endfor %}
-      {% endif %}
+        <h1>Hello, world!</h1>
       </div>
     </div>
 

@@ -22,3 +22,7 @@ def index(request):
 	context = {}
 	context['experience_list'] = resp['experience']
 	return render(request, 'index.html', context)
+
+def experienceDetail(request, exp_id):
+	context = {}
+	return render(request, 'experience_detail.html', context)
