@@ -8,22 +8,20 @@ class EventForm(ModelForm):
 		model = Event
 		fields = ['title', 'description', 'datetime', 'price']
 
+class EventFormUpdate(ModelForm):
+	class Meta:
+		model = Event
+		fields = ['title', 'description', 'datetime', 'price', 'experience']
+
 class ExperienceForm(ModelForm):
 	class Meta:
 		model = Experience
 		fields = ['title', 'description', 'totalPrice']
 
-class UserFormCreate(forms.Form):
-	firstName = forms.CharField(max_length=20)
-	lastName = forms.CharField(max_length=20)
-	username = forms.CharField(max_length=30)
-	password = forms.CharField(max_length=50)
-
-class UserFormUpdateUser(forms.Form):
-	firstName = forms.CharField(max_length=20)
-	lastName = forms.CharField(max_length=20)
-	username = forms.CharField(max_length=30)
-	password = forms.CharField(max_length=50)
+class UserForm(ModelForm):
+	class Meta:
+		model = User
+		fields = ['firstName', 'lastName', 'username', 'password']
 
 class UserFormUpdateExperience(forms.Form):
 	exp_id = forms.CharField(max_length = 1000000)

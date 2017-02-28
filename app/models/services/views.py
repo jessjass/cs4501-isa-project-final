@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 
 from .models import Event, Experience, User
-from .forms import EventForm, ExperienceForm, UserFormCreate, UserFormUpdateUser, UserFormUpdateExperience, UserFormUpdateEvent,UserFormUpdateFriend
+from .forms import EventForm, ExperienceForm, UserForm, UserFormUpdateExperience, UserFormUpdateEvent,UserFormUpdateFriend,EventFormUpdate
 
 # "/" : entry point to Models API
 def index(request):
@@ -55,13 +55,12 @@ def eventById(request, event_id):
 			return JsonResponse(json.loads(data), safe=False)
 
 		if request.method == 'POST':
-			form = EventForm(request.POST, instance=event)
+			form = EventFormUpdate(request.POST, instance=event)
 
 			if form.is_valid():
 				e = form.save()
 				response_data['result'] = '200'
 				response_data['message'] = 'OK: Successful'
-				response_data['old'] = json.loads(serializers.serialize("json", [event,]))
 				response_data['event'] = json.loads(serializers.serialize("json", [e,]))
 				return JsonResponse(response_data, safe = False)
 			else:
@@ -104,7 +103,7 @@ def remove(request):
 
 # "/experience" : list of all experiences via GET or create an event via POST
 def experienceAll(request):
-	experiences = Experience.objects.all()
+	experiences = Experience.objects.filter(**request.GET.dict())
 
 	if request.method == 'GET':
 		data = serializers.serialize("json", experiences)
@@ -128,9 +127,10 @@ def experienceAll(request):
 
 # "/experience/<experience_id>/" : experience by id via GET or experience update via POST
 def experienceById(request, exp_id):
-	experience = Experience.objects.get(pk=exp_id)
-
-	if not experience:
+	
+	try:
+		experience = Experience.objects.get(pk=exp_id)
+	except ObjectDoesNotExist:
 		response_data = {}
 		response_data['result'] = '404'
 		response_data['message'] = 'Not Found: Experience item not found'
@@ -150,7 +150,6 @@ def experienceById(request, exp_id):
 				response_data = {}
 				response_data['result'] = '200'
 				response_data['message'] = 'OK: Successful'
-				response_data['old'] = json.loads(serializers.serialize("json", [experience,]))
 				response_data['experience'] = json.loads(serializers.serialize("json", [e,]))
 				return JsonResponse(response_data, safe=False)
 			else:
@@ -165,9 +164,10 @@ def removeExperience(request):
 
 	if request.method == 'POST':
 		experience_id = request.POST['experience_id']
-		experience = Experience.objects.filter(pk = experience_id)	
 
-		if not experience:
+		try:
+			experience = Experience.objects.filter(pk = experience_id)	
+		except ObjectDoesNotExist:
 			response_data = {}
 			response_data['result'] = '404'
 			response_data['message'] = "Not Found: Experience item not found"
@@ -180,23 +180,17 @@ def removeExperience(request):
 			return JsonResponse(response_data, safe = False)
 
 def userAll(request):
-	user = User.objects.all()
+	user = User.objects.filter(**request.GET.dict())
 
 	if request.method == 'GET':
 		data = serializers.serialize("json", user)
 		return JsonResponse(json.loads(data), safe=False)
 
 	if request.method == 'POST':
-		form = UserFormCreate(request.POST)
+		form = UserForm(request.POST)
 
 		if form.is_valid():
-			e = User()
-			e.firstName = form.cleaned_data['firstName']
-			e.lastName = form.cleaned_data['lastName']
-			e.username = form.cleaned_data['username']
-			e.password = form.cleaned_data['password'] 
-			e.save()
-
+			e = form.save()
 			response_data = {}
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
@@ -209,35 +203,29 @@ def userAll(request):
 			return JsonResponse(response_data, safe = False)
 
 def userById(request, user_id):
-	user = User.objects.filter(pk = user_id)
 
-	if not user:
+	try:
+		user = User.objects.get(pk = user_id)
+	except ObjectDoesNotExist:
 		response_data = {}
 		response_data['result'] = '404'
-		response_data['message'] = 'Not Found: user not found'
+		response_data['message'] = 'Not Found: User not found'
 		return JsonResponse(response_data, safe=False)
 	else:
 
 		if request.method == 'GET':
-				data = serializers.serialize("json", user)
+				data = serializers.serialize("json", [user])
 				return JsonResponse(json.loads(data), safe=False)
 
 		if request.method == 'POST':
-			form = UserFormUpdateUser(request.POST)
+			form = UserForm(request.POST, instance = user)
 
 			if form.is_valid():
-				e = User.objects.get(pk = user_id)
-
-				e.firstName = form.cleaned_data['firstName']
-				e.lastName = form.cleaned_data['lastName']
-				e.username = form.cleaned_data['username']
-				e.password = form.cleaned_data['password'] 
-				e.save()
+				e = form.save()
 
 				response_data = {}
 				response_data['result'] = '200'
 				response_data['message'] = 'OK: Successful'
-				response_data['old'] = json.loads(serializers.serialize("json", user))
 				response_data['user'] = json.loads(serializers.serialize("json", [e,]))
 				return JsonResponse(response_data, safe = False)
 
@@ -248,12 +236,13 @@ def userById(request, user_id):
 				return JsonResponse(response_data, safe = False)
 
 def addExpUserById(request, user_id):
-	user = User.objects.filter(pk = user_id)
-
-	if not user:
+	
+	try:
+		user = User.objects.filter(pk = user_id)
+	except ObjectDoesNotExist:
 		response_data = {}
 		response_data['result'] = '404'
-		response_data['message'] = 'Not Found: user not found'
+		response_data['message'] = 'Not Found: User not found'
 		return JsonResponse(response_data, safe=False)
 
 	else:
@@ -281,7 +270,6 @@ def addExpUserById(request, user_id):
 					response_data = {}
 					response_data['result'] = '200'
 					response_data['message'] = 'OK: Successful'
-					response_data['old'] = json.loads(serializers.serialize("json", user))
 					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
 					return JsonResponse(response_data, safe = False)
 				else:
@@ -297,7 +285,6 @@ def addExpUserById(request, user_id):
 					response_data = {}
 					response_data['result'] = '200'
 					response_data['message'] = 'OK: Successful'
-					response_data['old'] = json.loads(serializers.serialize("json", user))
 					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
 					return JsonResponse(response_data, safe = False)
 				
@@ -308,13 +295,13 @@ def addExpUserById(request, user_id):
 				return JsonResponse(response_data, safe = False)
 
 def addEventUserById(request, user_id):
-	user = User.objects.filter(pk = user_id)
 
-	if not user:
-
+	try:
+		user = User.objects.filter(pk = user_id)
+	except ObjectDoesNotExist:
 		response_data = {}
 		response_data['result'] = '404'
-		response_data['message'] = 'Not Found: user not found'
+		response_data['message'] = 'Not Found: User not found'
 		return JsonResponse(response_data, safe=False)
 
 	else:
@@ -339,7 +326,6 @@ def addEventUserById(request, user_id):
 					response_data = {}
 					response_data['result'] = '200'
 					response_data['message'] = 'OK: Successful'
-					response_data['old'] = json.loads(serializers.serialize("json", user))
 					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
 					return JsonResponse(response_data, safe = False)
 				else:
@@ -349,7 +335,6 @@ def addEventUserById(request, user_id):
 					response_data = {}
 					response_data['result'] = '200'
 					response_data['message'] = 'OK: Successful'
-					response_data['old'] = json.loads(serializers.serialize("json", user))
 					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
 					return JsonResponse(response_data, safe = False)
 
@@ -361,13 +346,13 @@ def addEventUserById(request, user_id):
 
 
 def addFriendUserById(request, user_id):
-	user = User.objects.filter(pk = user_id)
 
-	if not user:
-
+	try:
+		user = User.objects.filter(pk = user_id)
+	except ObjectDoesNotExist:
 		response_data = {}
 		response_data['result'] = '404'
-		response_data['message'] = 'Not Found: user not found'
+		response_data['message'] = 'Not Found: User not found'
 		return JsonResponse(response_data, safe=False)
 
 	else:
@@ -389,7 +374,6 @@ def addFriendUserById(request, user_id):
 					response_data = {}
 					response_data['result'] = '200'
 					response_data['message'] = 'OK: Successful'
-					response_data['old'] = json.loads(serializers.serialize("json", user))
 					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
 					return JsonResponse(response_data, safe = False)
 				else:
@@ -399,7 +383,6 @@ def addFriendUserById(request, user_id):
 					response_data = {}
 					response_data['result'] = '200'
 					response_data['message'] = 'OK: Successful'
-					response_data['old'] = json.loads(serializers.serialize("json", user))
 					response_data['user'] = json.loads(serializers.serialize("json", [e,]))
 					return JsonResponse(response_data, safe = False)
 
@@ -415,12 +398,12 @@ def removeUser(request):
 
 		user_id = request.POST["user_id"]
 	
-		user = User.objects.filter(pk = user_id)	
-
-		if not user:
+		try:
+			user = User.objects.filter(pk = user_id)	
+		except ObjectDoesNotExist:
 			response_data = {}
 			response_data['result'] = '404'
-			response_data['message'] = "Not Found: user item not found"
+			response_data['message'] = "Not Found: User not found"
 			return JsonResponse(response_data, safe = False)
 
 		else:

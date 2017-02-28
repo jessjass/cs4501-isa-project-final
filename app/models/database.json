@@ -18,6 +18,15 @@
     }
 },
 {
+    "model": "services.experience",
+    "pk": 3,
+    "fields": {
+        "title": "Winter getaway",
+        "description": "Snowshoe",
+        "totalPrice": "350.00"
+    }
+},
+{
     "model": "services.event",
     "pk": 1,
     "fields": {
@@ -62,6 +71,28 @@
     }
 },
 {
+    "model": "services.event",
+    "pk": 5,
+    "fields": {
+        "datetime": "2017-03-05T08:00:00Z",
+        "price": "20.00",
+        "title": "Drive to SnowShoe",
+        "description": "3 hour drive to the cabin",
+        "experience": 3
+    }
+},
+{
+    "model": "services.event",
+    "pk": 6,
+    "fields": {
+        "datetime": "2017-03-06T09:00:00Z",
+        "price": "20.00",
+        "title": "Skiing all day",
+        "description": "Or you can just chill at the cabin",
+        "experience": 3
+    }
+},
+{
     "model": "services.user",
     "pk": 1,
     "fields": {
@@ -75,6 +106,10 @@
         ],
         "experienceIn": [
             1
+        ],
+        "friends": [
+            2,
+            3
         ]
     }
 },
@@ -92,6 +127,54 @@
         ],
         "experienceIn": [
             2
+        ],
+        "friends": [
+            1,
+            3
+        ]
+    }
+},
+{
+    "model": "services.user",
+    "pk": 3,
+    "fields": {
+        "firstName": "Paul",
+        "lastName": "Rudd",
+        "username": "PR",
+        "password": "ruddy",
+        "eventsIn": [
+            3,
+            4
+        ],
+        "experienceIn": [
+            2
+        ],
+        "friends": [
+            4
+        ]
+    }
+},
+{
+    "model": "services.user",
+    "pk": 4,
+    "fields": {
+        "firstName": "Alpa",
+        "lastName": "Chino",
+        "username": "Alpa",
+        "password": "tropicthunder",
+        "eventsIn": [
+            3,
+            4,
+            5,
+            6
+        ],
+        "experienceIn": [
+            2,
+            3
+        ],
+        "friends": [
+            1,
+            3
         ]
     }
 }
