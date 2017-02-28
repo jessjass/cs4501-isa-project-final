@@ -19,6 +19,7 @@ def index(request):
 		resp_json = resp_json.read().decode('utf-8')
 		resp = json.loads(resp_json)
 		context['experience_list'] = resp['experience']
+		context['currentUser'] = resp['currentUser']
 
 	return render(request, 'index.html', context)
 
@@ -34,5 +35,6 @@ def experienceDetail(request, exp_id):
 		resp_json = resp_json.read().decode('utf-8')
 		resp = json.loads(resp_json)
 		context['experience_events'] = resp['experience_events']
+		context['currentUser'] = resp['currentUser']
 
 	return render(request, 'experience_detail.html', context)

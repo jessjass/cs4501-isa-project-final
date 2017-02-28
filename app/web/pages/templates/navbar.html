@@ -17,7 +17,11 @@
         <li><a href="{% url 'home' %}">Experiences</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        {% if currentUser %}
+          <li><a href="">Welcome, {{ currentUser.0.fields.firstName }}!</a></li>
+        {% else %}
         <li><a href="">Welcome, User!</a></li>
+        {% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
