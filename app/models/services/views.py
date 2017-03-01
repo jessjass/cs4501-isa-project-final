@@ -54,7 +54,10 @@ def eventById(request, event_id):
 	else:
 		if request.method == 'GET':
 			data = serializers.serialize("json", [event,])
-			return JsonResponse(json.loads(data), safe=False)
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			response_data['event'] = json.loads(data)
+			return JsonResponse(response_data, safe=False)
 
 		if request.method == 'POST':
 			form = EventFormUpdate(request.POST, instance=event)
@@ -82,7 +85,10 @@ def eventByExpId(request, exp_id):
 	else:
 		if request.method == 'GET':
 			data = serializers.serialize("json", event)
-			return JsonResponse(json.loads(data), safe=False)
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			response_data['event_list'] = json.loads(data)
+			return JsonResponse(response_data, safe=False)
 
 		
 

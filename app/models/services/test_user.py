@@ -27,7 +27,7 @@ class getUserDetailsTestCase(TestCase):
 
         # request.user = self.user
         dc = json.loads(response.content.decode("utf-8"))[0]['fields']
-        print (dc['firstName'])
+        # print (dc['firstName'])
         self.assertEquals(response.status_code, 200)
 
     #tearDown method is called after each test
