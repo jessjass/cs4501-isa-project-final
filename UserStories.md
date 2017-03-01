@@ -1,6 +1,4 @@
 # User Stories
-
----
 As a user, I want to see all events on the events page.
 
 As a user, I want to see all experiences on the experiences page.
