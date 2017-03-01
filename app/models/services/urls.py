@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^v1/experience/$', views.experienceAll),
     url(r'^v1/experience/remove/$', views.removeExperience),
     url(r'^v1/user/$', views.userAll),
-    url(r'^v1/user/(?P<user_id>[0-9]+)/$', views.userById),
+    url(r'^v1/user/(?P<user_id>[0-9]+)/$', views.userById, name='getById'),
     url(r'^v1/user/experience/(?P<user_id>[0-9]+)/$', views.addExpUserById),
     url(r'^v1/user/event/(?P<user_id>[0-9]+)/$', views.addEventUserById),
     url(r'^v1/user/friend/(?P<user_id>[0-9]+)/$', views.addFriendUserById),
