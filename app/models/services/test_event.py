@@ -19,27 +19,24 @@ class TestEvent(TestCase):
 
 	def testGetAllEvents(self):
 		''' Test for getting all events '''
-		resp = self.client.get('/api/v1/event/')
-		json_resp = json.loads(resp.content.decode('utf-8'))
+		resp = self.client.get('/api/v1/event/').json()
 
-		self.assertEqual(json_resp['result'], '200')
-		self.assertEqual(json_resp['event_list'][0]['fields']['title'], self.testEvent.title)
+		self.assertEqual(resp['result'], '200')
+		self.assertEqual(resp['event_list'][0]['fields']['title'], self.testEvent.title)
 
 	def testGetEventById(self):
 		''' Test for getting event by id '''
-		resp = self.client.get('/api/v1/event/{0}/'.format(self.testEvent.pk))
-		json_resp = json.loads(resp.content.decode('utf-8'))
+		resp = self.client.get('/api/v1/event/{0}/'.format(self.testEvent.pk)).json()
 
-		self.assertEqual(json_resp['result'], '200')
-		self.assertEqual(json_resp['event'][0]['fields']['title'], self.testEvent.title)
+		self.assertEqual(resp['result'], '200')
+		self.assertEqual(resp['event'][0]['fields']['title'], self.testEvent.title)
 
 	def testGetEventByIdDNE(self):
 		''' Test for getting event by id where id doesn't exist '''
-		resp = self.client.get('/api/v1/event/100/')
-		json_resp = json.loads(resp.content.decode('utf-8'))
+		resp = self.client.get('/api/v1/event/100/').json()
 
-		self.assertEqual(json_resp['result'], '404')
-		self.assertEqual(json_resp['message'], 'Not Found: Event item not found')
+		self.assertEqual(resp['result'], '404')
+		self.assertEqual(resp['message'], 'Not Found: Event item not found')
 
 	def testAddEvent(self):
 		''' Test for creating an event '''
@@ -50,21 +47,19 @@ class TestEvent(TestCase):
 			'datetime' : '2017-03-01 12:00:00'
 		}
 
-		resp = self.client.post('/api/v1/event/', form)
-		json_resp = json.loads(resp.content.decode('utf-8'))
+		resp = self.client.post('/api/v1/event/', form).json()
 
-		self.assertEqual(json_resp['result'], '200')
-		self.assertEqual(json_resp['event'][0]['fields']['title'], form['title'])
+		self.assertEqual(resp['result'], '200')
+		self.assertEqual(resp['event'][0]['fields']['title'], form['title'])
 
 	def testGetEventByExperience(self):
 		''' Test for getting all events in an experience '''
-		resp = self.client.get('/api/v1/event/experience/{0}/'.format(self.testExperience.pk))
-		json_resp = json.loads(resp.content.decode('utf-8'))
-		
-		self.assertEqual(json_resp['result'], '200')
+		resp = self.client.get('/api/v1/event/experience/{0}/'.format(self.testExperience.pk)).json()
+
+		self.assertEqual(resp['result'], '200')
 
 		event_titles = []
-		for event in json_resp['event_list']:
+		for event in resp['event_list']:
 			event_titles.append(event['fields']['title'])
 
 		self.assertIn(self.testEvent2.title, event_titles)
@@ -75,22 +70,20 @@ class TestEvent(TestCase):
 		form = {
 			'event_id' : self.testEvent.pk
 		}
-		resp = self.client.post('/api/v1/event/remove/', form)
-		json_resp = json.loads(resp.content.decode('utf-8'))
+		resp = self.client.post('/api/v1/event/remove/', form).json()
 		
-		self.assertEqual(json_resp['result'], '200')
-		self.assertEqual(json_resp['message'], 'OK: Successful')
+		self.assertEqual(resp['result'], '200')
+		self.assertEqual(resp['message'], 'OK: Successful')
 
 	def testRemoveEventDNE(self):
 		''' Test for removing an event that doesn't exist '''
 		form = {
 			'event_id' : 100
 		}
-		resp = self.client.post('/api/v1/event/remove/', form)
-		json_resp = json.loads(resp.content.decode('utf-8'))
+		resp = self.client.post('/api/v1/event/remove/', form).json()
 		
-		self.assertEqual(json_resp['result'], '404')
-		self.assertEqual(json_resp['message'], 'Not Found: Event item not found')
+		self.assertEqual(resp['result'], '404')
+		self.assertEqual(resp['message'], 'Not Found: Event item not found')
 
 	def tearDown(self):
 		pass
