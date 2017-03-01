@@ -36,5 +36,9 @@ def experienceDetail(request, exp_id):
 		resp = json.loads(resp_json)
 		context['experience_events'] = resp['experience_events']
 		context['currentUser'] = resp['currentUser']
-
-	return render(request, 'experience_detail.html', context)
+	
+	if context['experience_events'] == []:
+		context['exp_id'] = exp_id
+		return render(request, 'experience_detail_error.html', context)
+	else:
+		return render(request, 'experience_detail.html', context)
