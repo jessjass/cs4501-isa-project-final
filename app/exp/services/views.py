@@ -72,7 +72,7 @@ def experienceDetail(request, exp_id):
 
 			response_data['result'] = "200"
 			response_data['message'] = "OK: Successful"
-			response_data['experience_events'] = resp
+			response_data['experience_events'] = resp['event_list']
 			response_data['currentUser'] = userResp
 
 		return JsonResponse(response_data, safe=False)
