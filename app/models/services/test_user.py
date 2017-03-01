@@ -2,6 +2,7 @@ from django.test import TestCase, Client, RequestFactory
 from django.core.urlresolvers import reverse
 from services.models import Experience, User, Event
 from django.test import Client
+import json
 
 # class testCaseOne(TestCase):
 #     def test_book(self):
@@ -25,8 +26,9 @@ class getUserDetailsTestCase(TestCase):
         # logged-in user by setting request.user manually.
 
         # request.user = self.user
-        print (response.__dict__)
-        self.assertContains(response, 'username')
+        dc = json.loads(response.content.decode("utf-8"))[0]['fields']
+        print (dc['firstName'])
+        self.assertEquals(response.status_code, 200)
 
     #tearDown method is called after each test
     def tearDown(self):
