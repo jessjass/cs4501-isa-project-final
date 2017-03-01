@@ -38,7 +38,7 @@ def index(request):
 
 			response_data['result'] = "200"
 			response_data['message'] = "OK: Successful"
-			response_data['experience'] = resp
+			response_data['experience'] = resp['experience']
 			response_data['currentUser'] = userResp
 		
 		return JsonResponse(response_data, safe=False)

@@ -115,7 +115,11 @@ def experienceAll(request):
 
 	if request.method == 'GET':
 		data = serializers.serialize("json", experiences)
-		return JsonResponse(json.loads(data), safe=False)
+		response_data = {}
+		response_data['result'] = '200'
+		response_data['message'] = 'OK: Successful'
+		response_data['experience'] = json.loads(data)
+		return JsonResponse(response_data, safe=False)
 
 	if request.method == 'POST':
 		form = ExperienceForm(request.POST)
@@ -147,8 +151,11 @@ def experienceById(request, exp_id):
 	else:
 
 		if request.method == 'GET':
-			data = serializers.serialize("json", [experience,])
-			return JsonResponse(json.loads(data), safe=False)
+			response_data = {}
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			response_data['experience'] = json.loads(serializers.serialize("json", [experience,]))
+			return JsonResponse(response_data, safe=False)
 
 		if request.method == 'POST':
 			form = ExperienceForm(request.POST, instance=experience)
@@ -174,7 +181,7 @@ def removeExperience(request):
 		experience_id = request.POST['experience_id']
 
 		try:
-			experience = Experience.objects.filter(pk = experience_id)	
+			experience = Experience.objects.get(pk = experience_id)	
 		except ObjectDoesNotExist:
 			response_data = {}
 			response_data['result'] = '404'
