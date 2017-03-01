@@ -5,18 +5,47 @@ from services.models import Experience, User, Event
 import json
 
 class TestEvent(TestCase):
+
 	def setUp(self):
 		self.testEvent = Event.objects.create(
-			title="Eat tacos", description="Now", price=10.00, datetime="2017-03-01T12:00:00Z")
+			title="Go to the mall", description="Walk around and get food", price=10.00, datetime="2017-03-01T12:00:00Z")
 		pass
 
-	def test_all_events(self):
-		response = self.client.get('/api/v1/event/')
-		response = json.loads(response.content.decode('utf-8'))
+	def testAll(self):
+		resp = self.client.get('/api/v1/event/')
+		json_resp = json.loads(resp.content.decode('utf-8'))
 
-		print(str(response[0]['fields']['title']))
-		self.assertEqual(response[0]['fields']['title'], self.testEvent.title)
-		# self.assertTrue(response.context, '400')
+		print(json_resp['result'])
+		print(json_resp)
+
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual(json_resp[0]['fields']['title'], self.testEvent.title)
+
+	def testGetEventById(self):
+		resp = self.client.get('/api/v1/event/{0}/'.format(self.testEvent.pk))
+		json_resp = json.loads(resp.content.decode('utf-8'))
+
+		print(resp)
+		print(json_resp)
+
+		self.assertEqual(resp.status_code, 200)
+		self.assertEqual(json_resp[0]['fields']['title'], self.testEvent.title)
+
+	# def testAddEvent(self):
+	# 	form = {
+	# 		'title' : 'Watching a movie',
+	# 		'description' : 'Logan, 8pm, Regal Stonefield',
+	# 		'price' : '12.50',
+	# 		'datetime' : '2017-03-01T12:00:00Z'
+	# 	}
+
+	# 	resp = self.client.post('/api/v1/event/', form)
+	# 	json_resp = json.loads(resp.content.decode('utf-8'))
+
+	# 	self.assertEqual(resp.status_code, 200)
+
+	# 	print(json_resp)
+
 
 	def tearDown(self):
 		pass

@@ -17,24 +17,26 @@ def index(request):
 
 # "/event" : list of all events via GET or create an event via POST
 def eventAll(request):
+	response_data = {}
 	events = Event.objects.filter(**request.GET.dict())
 
 	if request.method == 'GET':
 		data = serializers.serialize("json", events)
-		return JsonResponse(json.loads(data), safe=False)
+		response_data['result'] = '200'
+		response_data['message'] = 'OK: Successful'
+		response_data['event_list'] = json.loads(data)
+		return JsonResponse(response_data, safe=False)
 
 	if request.method == 'POST':
 		form = EventForm(request.POST)
 
 		if form.is_valid():
 			e = form.save()
-			response_data = {}
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
 			response_data['event'] = json.loads(serializers.serialize("json", [e,]))
 			return JsonResponse(response_data, safe = False)
 		else:
-			response_data = {}
 			response_data['result'] = '400'
 			response_data['message'] = 'Bad Request'
 			return JsonResponse(response_data, safe = False)
