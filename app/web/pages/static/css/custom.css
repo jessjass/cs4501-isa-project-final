@@ -7,7 +7,6 @@ body {
 	width: 100%;
 	display: inline-block;
 	box-sizing: border-box;
-	padding: 20px;
 	margin-bottom: 30px;
     background-repeat: no-repeat;
     background-size: cover;
@@ -21,10 +20,18 @@ body {
 }
 
 .tile-description {
+	width:100%; 
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 0px 20px;
 	position: absolute; 
 	bottom: 0;
 }
 
 .tile-description > h3 {
 	color: #fff;
+}
+
+.tile-divider {
+	margin:0px 0px 5px 0px;
+	border-color: rgba(255, 255, 255, 0.5);
 }

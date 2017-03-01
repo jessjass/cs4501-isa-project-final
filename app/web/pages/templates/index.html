@@ -38,8 +38,8 @@
           <div class="tile" style="background-image: url('{% static static_image %}');">
             <div class="tile-description">
               <h3>{{ experience.fields.title }}</h3>
-              <p>{{ experience.fields.description }}</p>
-              <p>${{ experience.fields.totalPrice }}</p>
+              <hr class="tile-divider"/>
+              <p>{{ experience.fields.description }} | ${{ experience.fields.totalPrice }}</p>
             </div>
           </div>
           </a>
