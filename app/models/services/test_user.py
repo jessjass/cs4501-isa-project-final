@@ -45,12 +45,11 @@ class TestUser(TestCase):
         self.assertEqual(resp['user'][0]['fields']['username'], form['username'])
 
     def testAddExpUserById(self):
-        # form_data = {'exp_id': '0', 'remove': 'FALSE'}
+        form_data = {'exp_id': self.testExperience1.pk, 'remove': 'FALSE'}
         # form = UserFormUpdateExperience(data=form_data)
-        # resp = self.client.post('/api/v1/user/experience/{0}/'.format(self.user1.pk), form).json()
+        resp = self.client.post('/api/v1/user/experience/{0}/'.format(self.user1.pk), form_data).json()
         
-        # self.assertEqual(resp['result'], '200')
-        pass
+        self.assertEqual(resp['result'], '200')
 
     def testAddExpUserByIdRemove(self):
         # form_data = {'exp_id': '0', 'remove': 'TRUE'}
