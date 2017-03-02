@@ -30,23 +30,27 @@
     {% include "navbar.html" %}    
     <div class="container-fluid">
       <div class="row">
-      {% if experience_list %}
-      {% for experience in experience_list %}
-        <div class="col-md-6">
-          {% with 'images/'|add:experience.fields.title|add:'.jpg' as static_image %}
-          <a href="{% url 'experienceDetail' experience.pk %}">
-          <div class="tile" style="background-image: url('{% static static_image %}');">
-            <div class="tile-description">
-              <h3>{{ experience.fields.title }}</h3>
-              <hr class="tile-divider"/>
-              <p>{{ experience.fields.description }} | ${{ experience.fields.totalPrice }}</p>
+        <div class="col-md-12">
+          {% if experience_events %}
+          {% for event in experience_events %}
+          <div class="media">
+            <div class="media-left">
+              <a href="">
+                {% with 'images/'|add:event.fields.title|add:'.jpg' as static_image %}
+                <img class="media-object" src="{% static static_image %}" height="100">
+                {% endwith %}
+              </a>
+            </div>
+            <div class="media-body">
+              <h4 class="media-heading">{{ event.fields.title }}</h4>
+              {{ event.fields.description }} <br>
+              ${{ event.fields.price }} <br>
+              {{ event.fields.datetime }} <br>
             </div>
           </div>
-          </a>
-          {% endwith %}
+          {% endfor %}
+          {% endif %}
         </div>
-      {% endfor %}
-      {% endif %}
       </div>
     </div>
 

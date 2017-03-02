@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
         "title": "Friday Fun",
-        "description": "lunch and a movie",
+        "description": "Lunch and a movie.",
         "totalPrice": "20.00"
     }
 },
@@ -12,9 +12,18 @@
     "model": "services.experience",
     "pk": 2,
     "fields": {
-        "title": "Weekend adventure",
-        "description": "Hiking then breweries",
+        "title": "Weekend Adventure",
+        "description": "Hiking then breweries.",
         "totalPrice": "20.00"
+    }
+},
+{
+    "model": "services.experience",
+    "pk": 3,
+    "fields": {
+        "title": "Winter getaway",
+        "description": "Snowshoe",
+        "totalPrice": "350.00"
     }
 },
 {
@@ -23,8 +32,8 @@
     "fields": {
         "datetime": "2017-03-01T12:00:00Z",
         "price": "10.00",
-        "title": "lunch at citizen burger",
-        "description": "food before the movie",
+        "title": "Lunch at Citizen Burger",
+        "description": "Grab a bite before the movie.",
         "experience": 1
     }
 },
@@ -34,7 +43,7 @@
     "fields": {
         "datetime": "2017-03-01T14:00:00Z",
         "price": "10.00",
-        "title": "Movie downtown",
+        "title": "Movie Downtown",
         "description": "La La Land",
         "experience": 1
     }
@@ -45,8 +54,8 @@
     "fields": {
         "datetime": "2017-03-02T14:00:00Z",
         "price": "0.00",
-        "title": "Hiking wintergreen",
-        "description": "great views",
+        "title": "Wintergreen Ski Resort",
+        "description": "Great views, great times.",
         "experience": 2
     }
 },
@@ -57,8 +66,30 @@
         "datetime": "2017-03-02T16:00:00Z",
         "price": "20.00",
         "title": "Breweries",
-        "description": "DB or Blue mountain or Bold rock",
+        "description": "DB or Blue Mountain or Bold Rock.",
         "experience": 2
+    }
+},
+{
+    "model": "services.event",
+    "pk": 5,
+    "fields": {
+        "datetime": "2017-03-05T08:00:00Z",
+        "price": "20.00",
+        "title": "Drive to SnowShoe",
+        "description": "3 hour drive to the cabin",
+        "experience": 3
+    }
+},
+{
+    "model": "services.event",
+    "pk": 6,
+    "fields": {
+        "datetime": "2017-03-06T09:00:00Z",
+        "price": "20.00",
+        "title": "Skiing all day",
+        "description": "Or you can just chill at the cabin",
+        "experience": 3
     }
 },
 {
@@ -75,6 +106,10 @@
         ],
         "experienceIn": [
             1
+        ],
+        "friends": [
+            2,
+            3
         ]
     }
 },
@@ -92,6 +127,54 @@
         ],
         "experienceIn": [
             2
+        ],
+        "friends": [
+            1,
+            3
+        ]
+    }
+},
+{
+    "model": "services.user",
+    "pk": 3,
+    "fields": {
+        "firstName": "Paul",
+        "lastName": "Rudd",
+        "username": "PR",
+        "password": "ruddy",
+        "eventsIn": [
+            3,
+            4
+        ],
+        "experienceIn": [
+            2
+        ],
+        "friends": [
+            4
+        ]
+    }
+},
+{
+    "model": "services.user",
+    "pk": 4,
+    "fields": {
+        "firstName": "Alpa",
+        "lastName": "Chino",
+        "username": "Alpa",
+        "password": "tropicthunder",
+        "eventsIn": [
+            3,
+            4,
+            5,
+            6
+        ],
+        "experienceIn": [
+            2,
+            3
+        ],
+        "friends": [
+            1,
+            3
         ]
     }
 }

@@ -30,23 +30,9 @@
     {% include "navbar.html" %}    
     <div class="container-fluid">
       <div class="row">
-      {% if experience_list %}
-      {% for experience in experience_list %}
-        <div class="col-md-6">
-          {% with 'images/'|add:experience.fields.title|add:'.jpg' as static_image %}
-          <a href="{% url 'experienceDetail' experience.pk %}">
-          <div class="tile" style="background-image: url('{% static static_image %}');">
-            <div class="tile-description">
-              <h3>{{ experience.fields.title }}</h3>
-              <hr class="tile-divider"/>
-              <p>{{ experience.fields.description }} | ${{ experience.fields.totalPrice }}</p>
-            </div>
-          </div>
-          </a>
-          {% endwith %}
+        <div class="col-md-12">
+          <h4>Sorry, the experience you are looking for does not exist.</h4>
         </div>
-      {% endfor %}
-      {% endif %}
       </div>
     </div>
 
