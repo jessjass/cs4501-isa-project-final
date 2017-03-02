@@ -414,7 +414,7 @@ def removeUser(request):
 		user_id = request.POST["user_id"]
 	
 		try:
-			user = User.objects.filter(pk = user_id)	
+			user = User.objects.get(pk = user_id)	
 		except ObjectDoesNotExist:
 			response_data = {}
 			response_data['result'] = '404'
