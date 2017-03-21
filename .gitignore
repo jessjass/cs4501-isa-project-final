@@ -2,7 +2,7 @@
 *.pyo
 db
 app/models/services/migrations/*
-app/models/models__pycache__
+app/models/models/__pycache__
 app/models/services/__pycache__
 app/exp/exp/__pycache__
 app/exp/services/__pycache__
