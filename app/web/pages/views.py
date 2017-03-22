@@ -53,12 +53,12 @@ def createEvent(request):
 
 def signIn(request):
 	if request.method == 'POST':
-	    # Send validated information to our experience layer
-	    email = request.POST.get("inputEmail")
-	    password = request.POST.get("inputPassword")
-	    resp = urllib.request.Request(exp_api + '/api/v1/experience/signin/')
+		# Send validated information to our experience layer
+		email = request.POST.get("inputEmail")
+		password = request.POST.get("inputPassword")
+		resp = urllib.request.Request(exp_api + '/api/v1/experience/signin/')
 
-	    try:
+		try:
 			resp_json = urllib.request.urlopen(req)
 		except URLError as e:
 			# ToDo: Add response redirects to 'login error' page
@@ -73,15 +73,15 @@ def signIn(request):
 				response_data['message'] = 'The server couldn\'t fulfill the request.'
 		else:
 
-		    """ If we made it here, we can log them in. """
-		    # Set their login cookie and redirect to back to wherever they came from
-		    
-		    # ToDo: update resp_json indices
-		    authenticator = resp_json['resp']['authenticator']
+			""" If we made it here, we can log them in. """
+			# Set their login cookie and redirect to back to wherever they came from
+			
+			# ToDo: update resp_json indices
+			authenticator = resp_json['resp']['authenticator']
 
-		    # response to return to home
-		    response = HttpResponseRedirect(exp_api + '/api/v1/')
-		    response.set_cookie("auth", authenticator, max_age=3600)
+			# response to return to home
+			response = HttpResponseRedirect(exp_api + '/api/v1/')
+			response.set_cookie("auth", authenticator, max_age=3600)
 
 	# return to index page
 	return response
