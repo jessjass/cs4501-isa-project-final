@@ -20,7 +20,7 @@
         {% if currentUser %}
           <li><a style="color:white;" href="">Welcome, {{ currentUser.0.fields.firstName }}!</a></li>
         {% else %}
-        <li><a style="color:white;" href="">Sign In</a></li>
+        <li><a style="color:white;" href="{% url 'signIn' %}">Sign In</a></li>
         {% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->
