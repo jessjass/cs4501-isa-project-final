@@ -27,3 +27,8 @@ class User(models.Model):
 	friends = models.ManyToManyField("self")
 	def __str__(self):              # __unicode__ on Python 2
         	return self.firstName + " " + self.lastName
+
+class Authenticator(models.Model):
+	user_id = models.CharField(max_length=50)
+	authenticator = models.CharField(max_length=255, primary_key=True, unique=True)
+	date_created = models.DateField()
