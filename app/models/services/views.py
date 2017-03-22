@@ -491,3 +491,28 @@ def createAuth(request):
 		response_data['message'] = 'Bad Request'
 		return JsonResponse(response_data, safe = False)
 
+def checkAuth(request):
+	# if request.method == 'GET':
+	# 	# auth = Authenticator.objects.all().delete()
+	# 	auth = Authenticator.objects.filter(**request.GET.dict())
+	# 	data = serializers.serialize("json", auth)
+	# 	return JsonResponse(json.loads(data), safe=False)
+
+	if request.method == 'POST':
+		user_id = request.POST["user_id"]
+		token = request.POST["token"]
+		response_data = {}
+
+		try:
+			auth = Authenticator.objects.get(pk = token, user_id = user_id)	
+		except ObjectDoesNotExist:
+			response_data = {}
+			response_data['result'] = '404'
+			response_data['message'] = "Not Found: User not found"
+			return JsonResponse(response_data, safe = False)
+
+		else:
+			response_data = {}
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			return JsonResponse(response_data, safe = False)
