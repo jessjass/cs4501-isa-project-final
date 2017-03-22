@@ -4,6 +4,7 @@ class Experience(models.Model):
 	title = models.CharField(max_length=200)
 	description = models.CharField(max_length=400)
 	totalPrice = models.DecimalField(max_digits=10, decimal_places=2)
+	createdBy = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
 	def __str__(self):              # __unicode__ on Python 2
         	return self.title
 
@@ -14,6 +15,7 @@ class Event(models.Model):
 	title = models.CharField(max_length=200)
 	description = models.CharField(max_length=400)
 	experience = models.ForeignKey(Experience, on_delete=models.CASCADE, null = True)
+	createdBy = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
 	def __str__(self):              # __unicode__ on Python 2
        		return self.title
 
