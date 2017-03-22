@@ -46,3 +46,7 @@ def experienceDetail(request, exp_id):
 def signIn(request):
 	context = {}
 	return render(request, 'sign_in.html', context)
+
+def createEvent(request):
+	context = {}
+	return render(request, 'create_event.html', context)
