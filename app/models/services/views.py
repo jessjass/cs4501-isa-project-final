@@ -427,3 +427,10 @@ def removeUser(request):
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
 			return JsonResponse(response_data, safe = False)
+
+# def createUser(request):
+
+# 	if request.method == 'POST':
+		
+# 	else:
+# 		return _error_response(request, "must make POST request")

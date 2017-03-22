@@ -43,6 +43,6 @@ def experienceDetail(request, exp_id):
 	else:
 		return render(request, 'experience_detail.html', context)
 
-def signIn(request):
+def signInPage(request):
 	context = {}
 	return render(request, 'sign_in.html', context)
