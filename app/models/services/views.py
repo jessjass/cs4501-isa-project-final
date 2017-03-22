@@ -440,23 +440,50 @@ def removeUser(request):
 
 def createAuth(request):
 	
+	if request.method == 'GET':
+		# auth = Authenticator.objects.all().delete()
+		auth = Authenticator.objects.filter(**request.GET.dict())
+		data = serializers.serialize("json", auth)
+		return JsonResponse(json.loads(data), safe=False)
+
 	if request.method == 'POST':
 		user_id = request.POST["user_id"]
+		response_data = {}
 
-		authenticator = hmac.new(
+		try:
+			auth = Authenticator.objects.get(user_id = user_id)
+		except ObjectDoesNotExist:
+			authenticator = hmac.new(
 				key = settings.SECRET_KEY.encode('utf-8'),
 				msg = os.urandom(32),
 				digestmod = 'sha256',
 			).hexdigest()
 
-		theAuth = Authenticator(user_id=user_id, authenticator= authenticator)
+			theAuth = Authenticator(user_id=user_id, authenticator= authenticator)
 
-		theAuth.save()
-		response_data = {}
-		response_data['result'] = '200'
-		response_data['message'] = 'OK: Successful'
-		response_data['auth'] = json.loads(serializers.serialize("json", [theAuth,]))
-		return JsonResponse(response_data, safe = False)
+			theAuth.save()
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			response_data['auth'] = json.loads(serializers.serialize("json", [theAuth,]))
+			return JsonResponse(response_data, safe = False)
+		else:
+			listAuth = Authenticator.objects.filter(user_id = user_id)
+			for singleAuth in listAuth:
+				singleAuth.delete()
+
+			authenticator = hmac.new(
+					key = settings.SECRET_KEY.encode('utf-8'),
+					msg = os.urandom(32),
+					digestmod = 'sha256',
+				).hexdigest()
+			auth.authenticator = authenticator
+			auth.save()
+
+			response_data = {}
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			response_data['auth'] = json.loads(serializers.serialize("json", [auth,]))
+			return JsonResponse(response_data, safe = False)
 
 	else:
 		response_data = {}
