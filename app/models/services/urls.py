@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^v1/user/event/(?P<user_id>[0-9]+)/$', views.addEventUserById),
     url(r'^v1/user/friend/(?P<user_id>[0-9]+)/$', views.addFriendUserById),
     url(r'^v1/user/remove/$', views.removeUser),
+    url(r'^v1/auth/create/$', views.createAuth)
 ]
