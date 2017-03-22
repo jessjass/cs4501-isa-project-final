@@ -431,6 +431,8 @@ def removeUser(request):
 # def createUser(request):
 
 # 	if request.method == 'POST':
-		
+# 		if 'email' not in request.POST or 'password' not in request.POST:
+# 			return _error_response(request, "missing required fields")
+
 # 	else:
 # 		return _error_response(request, "must make POST request")
