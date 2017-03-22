@@ -12,7 +12,6 @@ class User(models.Model):
         	return self.firstName + " " + self.lastName
 
 class Event(models.Model):
-
 	datetime = models.DateTimeField()
 	price = models.DecimalField(max_digits=6, decimal_places=2)
 	title = models.CharField(max_length=200)
