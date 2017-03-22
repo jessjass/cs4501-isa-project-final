@@ -1,26 +1,26 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top navbar-light" style="background-color: #ff5c33; color: white;" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" >
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{% url 'home' %}">Marketplace</a>
+      <a class="navbar-brand" style="font-size: 40px; color:white;" href="{% url 'home' %}">GoX</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="{% url 'home' %}">Experiences</a></li>
+      <ul class="nav navbar-nav" style="font-size: 20px;">
+        <li><a style="color:white;" href="{% url 'home' %}">Experiences</a></li>
       </ul>
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right" style="font-size: 20px;">
         {% if currentUser %}
-          <li><a href="">Welcome, {{ currentUser.0.fields.firstName }}!</a></li>
+          <li><a style="color:white;" href="">Welcome, {{ currentUser.0.fields.firstName }}!</a></li>
         {% else %}
-        <li><a href="">Welcome, User!</a></li>
+        <li><a style="color:white;" href="">Welcome, User!</a></li>
         {% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->
