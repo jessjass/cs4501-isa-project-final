@@ -36,26 +36,27 @@
               <h3 class="panel-title">Create Event</h3>
             </div>
             <div class="panel-body">
-            <form>
-
+            <form method="POST" action="{% url 'createEvent' %}">
+            
+              {% csrf_token %}
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="inputEventTitle">Title</label>
-                  <input type="text" class="form-control" id="inputEventTitle" placeholder="What?">
+                  <input type="text" class="form-control" name="inputEventTitle" id="inputEventTitle" placeholder="What?">
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="inputEventDate">Date</label>
-                  <input type="date" class="form-control" id="inputEventDate">
+                  <input type="date" class="form-control" name="inputEventDate" id="inputEventDate">
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="inputEventTime">Time</label>
-                  <input type="time" class="form-control" id="inputEventTime">
+                  <input type="time" class="form-control" name="inputEventTime" id="inputEventTime">
                 </div>
               </div>
 
@@ -64,7 +65,7 @@
                   <label for="inputEventPrice">Price</label>
                   <div class="input-group">
                   <span class="input-group-addon" style="padding:0px 5px 0px 0px">$</span>
-                  <input onkeypress="return event.charCode >= 48 && event.charCode <= 57" step='0.01' value='0.00' placeholder='0.00'  class="form-control" id="inputEventPrice"/>
+                  <input onkeypress="return event.charCode >= 48 && event.charCode <= 57" step='0.01' value='0.00' placeholder='0.00'  class="form-control" name="inputEventPrice" id="inputEventPrice"/>
                   </div>
                 </div>
               </div>
@@ -72,17 +73,17 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="inputEventDescription">Description</label>
-                  <textarea class="form-control" id="inputEventDescription" placeholder="Describe your event." rows="3"></textarea>
+                  <textarea class="form-control" name="inputEventDescription" id="inputEventDescription" placeholder="Describe your event." rows="3"></textarea>
                 </div>
               </div>
 
-              <div class="col-md-12">
+<!--               <div class="col-md-12">
                 <div class="form-group">
                   <label for="exampleInputFileImage">Image Upload</label>
-                  <input type="file" id="exampleInputFileImage">
+                  <input type="file" name="exampleInputFileImage" id="exampleInputFileImage" accept=".png,.jpg, .jpeg">
                   <p class="help-block">Upload an image of your event.</p>
                 </div>
-              </div>
+              </div> -->
 
               <button type="submit" class="btn btn-default">Create</button>
             </form>

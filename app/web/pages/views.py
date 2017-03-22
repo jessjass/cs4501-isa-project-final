@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 import urllib.request
 import urllib.parse
@@ -49,7 +50,19 @@ def signInPage(request):
 
 def createEvent(request):
 	context = {}
-	return render(request, 'create_event.html', context)
+
+	if request.method == 'POST':
+
+		title = request.POST.get("inputEventTitle")
+		date = request.POST.get("inputEventDate")
+		time = request.POST.get("inputEventTime")
+		price = request.POST.get("inputEventPrice")
+		description = request.POST.get("inputEventDescription")
+
+		return HttpResponse(description)
+
+	if request.method == 'GET':
+		return render(request, 'create_event.html', context)
 
 def signIn(request):
 	if request.method == 'POST':
