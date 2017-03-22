@@ -12,7 +12,7 @@ body {
     background-size: cover;
     background-position: center bottom;
     height:300px;
-    position: relative
+    position: relative;
 }
 
 .tile:hover {
