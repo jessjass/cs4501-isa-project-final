@@ -2,9 +2,10 @@ from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
-import json
+import json, os, hmac, datetime
+from django.conf import settings
 
-from .models import Event, Experience, User
+from .models import Event, Experience, User, Authenticator
 from .forms import EventForm, ExperienceForm, UserForm, UserFormUpdateExperience, UserFormUpdateEvent,UserFormUpdateFriend,EventFormUpdate
 
 # "/" : entry point to Models API
@@ -427,3 +428,39 @@ def removeUser(request):
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
 			return JsonResponse(response_data, safe = False)
+
+# def createUser(request):
+
+# 	if request.method == 'POST':
+# 		if 'email' not in request.POST or 'password' not in request.POST:
+# 			return _error_response(request, "missing required fields")
+
+# 	else:
+# 		return _error_response(request, "must make POST request")
+
+def createAuth(request):
+	
+	if request.method == 'POST':
+		user_id = request.POST["user_id"]
+
+		authenticator = hmac.new(
+				key = settings.SECRET_KEY.encode('utf-8'),
+				msg = os.urandom(32),
+				digestmod = 'sha256',
+			).hexdigest()
+
+		theAuth = Authenticator(user_id=user_id, authenticator= authenticator)
+
+		theAuth.save()
+		response_data = {}
+		response_data['result'] = '200'
+		response_data['message'] = 'OK: Successful'
+		response_data['auth'] = json.loads(serializers.serialize("json", [theAuth,]))
+		return JsonResponse(response_data, safe = False)
+
+	else:
+		response_data = {}
+		response_data['result'] = '400'
+		response_data['message'] = 'Bad Request'
+		return JsonResponse(response_data, safe = False)
+
