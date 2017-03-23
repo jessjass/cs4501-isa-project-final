@@ -91,7 +91,6 @@ def createEvent(request):
 		description = request.POST['inputEventDescription']
 
 		post_data['title'] = title
-		return JsonResponse(post_data)
 		post_data['datetime'] = date + ' ' + time + ':00'
 		post_data['price'] = price
 		post_data['description'] = description
@@ -100,7 +99,7 @@ def createEvent(request):
 		# post_data['createdBy'] = 
 
 		try:
-			r = requests.post(models_api + '/api/v1/event/', post_data)
+			resp = requests.post(models_api + '/api/v1/event/', post_data)
 		except requests.exceptions.RequestException as e:
 			return JsonResponse({ "error" : e }, safe=False)
 		else:

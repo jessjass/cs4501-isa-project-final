@@ -68,11 +68,7 @@ def createEvent(request):
 		except requests.exceptions.RequestException as e:
 			return HttpResponse(e)
 		else:
-			# resp = resp.read().decode('utf-8')
-			# resp = json.loads(resp)
-
-			return HttpResponse(resp)
-			# return JsonResponse(resp, safe=False)
+			return JsonResponse(resp.json())
 
 	if request.method == 'GET':
 		return render(request, 'create_event.html', context)
