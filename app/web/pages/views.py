@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+
 
 import urllib.request
 import urllib.parse
 from urllib.error import URLError
 import json
+import requests
 
 exp_api = 'http://exp:8000'
 
@@ -53,13 +55,24 @@ def createEvent(request):
 
 	if request.method == 'POST':
 
-		title = request.POST.get("inputEventTitle")
-		date = request.POST.get("inputEventDate")
-		time = request.POST.get("inputEventTime")
-		price = request.POST.get("inputEventPrice")
-		description = request.POST.get("inputEventDescription")
+		post_data = {
+			'inputEventTitle' : request.POST['inputEventTitle'],
+			'inputEventDescription' : request.POST['inputEventDescription'],
+			'inputEventDate' : request.POST['inputEventDate'],
+			'inputEventTime' : request.POST['inputEventTime'],
+			'inputEventPrice' : request.POST['inputEventPrice']
+		}
 
-		return HttpResponse(description)
+		try:
+			resp = requests.post(exp_api + '/api/v1/event/create/', post_data)
+		except requests.exceptions.RequestException as e:
+			return HttpResponse(e)
+		else:
+			# resp = resp.read().decode('utf-8')
+			# resp = json.loads(resp)
+
+			return HttpResponse(resp)
+			# return JsonResponse(resp, safe=False)
 
 	if request.method == 'GET':
 		return render(request, 'create_event.html', context)

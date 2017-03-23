@@ -5,6 +5,7 @@ import urllib.request
 import urllib.parse
 from urllib.error import URLError
 import json
+import requests
 
 models_api = 'http://models:8000'
 
@@ -63,6 +64,7 @@ def experienceDetail(request, exp_id):
 			elif hasattr(e, 'code'):
 				response_data['result'] = e.code # error code
 				response_data['message'] = 'The server couldn\'t fulfill the request.'
+		
 		else:
 			resp_json = resp_json.read().decode('utf-8')
 			userResp_json = userResp_json.read().decode('utf-8')
@@ -77,5 +79,31 @@ def experienceDetail(request, exp_id):
 
 		return JsonResponse(response_data, safe=False)
 
+def createEvent(request):
+	response_data = {}
+	post_data = {}
 
+	if request.method == 'POST':
+		title = request.POST['inputEventTitle']
+		date = request.POST['inputEventDate']
+		time = request.POST['inputEventTime']
+		price = request.POST['inputEventPrice']
+		description = request.POST['inputEventDescription']
 
+		post_data['title'] = title
+		return JsonResponse(post_data)
+		post_data['datetime'] = date + ' ' + time + ':00'
+		post_data['price'] = price
+		post_data['description'] = description
+
+		# Fix this to add user who is creating this event
+		# post_data['createdBy'] = 
+
+		try:
+			r = requests.post(models_api + '/api/v1/event/', post_data)
+		except requests.exceptions.RequestException as e:
+			return JsonResponse({ "error" : e }, safe=False)
+		else:
+			response_data['result'] = "200"
+			response_data['message'] = "OK: Successful"
+			return JsonResponse(response_data, safe=False)
