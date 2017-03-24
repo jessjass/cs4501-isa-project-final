@@ -7,7 +7,7 @@ from urllib.error import URLError
 import json
 import requests
 
-from .forms import CreateEventForm, SignInForm
+from .forms import CreateEventForm, SignInForm, SignUpForm
 
 exp_api = 'http://exp:8000'
 
@@ -47,6 +47,41 @@ def experienceDetail(request, exp_id):
 	else:
 		return render(request, 'experience_detail.html', context)
 
+def signUp(request):
+	context = {}
+	if request.method == 'GET':
+		form = SignUpForm()
+		context['form'] = form
+		return render(request, 'sign_up.html', context)
+
+	if request.method == 'POST':
+		form = SignUpForm(request.POST)
+
+		if not form.is_valid():
+			context['form'] = form
+			return render(request, 'sign_up.html', context)
+
+		username = form.cleaned_data['username']
+		password = form.cleaned_data['password']
+		confirm_password = form.cleaned_data['confirm_password']
+		first_name = form.cleaned_data['first_name']
+		last_name = form.cleaned_data['last_name']
+
+		if password != confirm_password:
+			context['form'] = form
+			context['passwordError'] = "Passwords do not match"
+			return render(request, 'sign_up.html', context)
+
+		post_data = {
+			'username' : username,
+			'password' : password,
+			'first_name' : first_name,
+			'last_name' : last_name
+		}
+
+
+		return JsonResponse(post_data)
+
 def signIn(request):
 	context = {}
 	if request.method == 'GET':
@@ -58,6 +93,7 @@ def signIn(request):
 		form = SignInForm(request.POST)
 
 		if not form.is_valid():
+			context['form'] = form
 			return render(request,'sign_in.html', context)
 
 		username = form.cleaned_data['username']
@@ -99,6 +135,7 @@ def createEvent(request):
 		form = CreateEventForm(request.POST)
 
 		if not form.is_valid():
+			context['form'] = form
 			return render(request, 'create_event.html', context)
 
 		post_data = {
