@@ -1,13 +1,13 @@
 from django import forms
 
 class SignInForm(forms.Form):
-	email = forms.EmailField(
-		label="Email",
+	username = forms.CharField(
+		label="Username",
 		max_length=30,
-		widget=forms.EmailInput(
+		widget=forms.TextInput(
 			attrs={
 			'class':'form-control',
-			'placeholder':'Email'
+			'placeholder':'Username'
 			}))
 
 	password = forms.CharField(

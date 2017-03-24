@@ -60,14 +60,14 @@ def signIn(request):
 		if not form.is_valid():
 			return render(request,'sign_in.html', context)
 
-		email = form.cleaned_data['email']
+		username = form.cleaned_data['username']
 		password = form.cleaned_data['password']
 
 		# Not working... not sure why...
 		# next = form.cleaned_data.get('next') or reverse('home')
 		
 		post_data = {
-			'email' : email,
+			'username' : username,
 			'password' : password
 		}
 

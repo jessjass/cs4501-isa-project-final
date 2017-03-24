@@ -2,6 +2,19 @@ body {
 	padding-top: 85px; 
 }
 
+.home_jumbotron {
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center bottom;
+	background-image: url('../images/concert.jpg');
+	color: #fff;
+}
+
+.home_jumbotron h1 {
+	padding-top: 100px;
+	color: #fff;
+}
+
 .tile {
 	color: #fff;
 	width: 100%;

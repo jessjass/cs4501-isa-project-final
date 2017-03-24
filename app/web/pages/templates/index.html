@@ -30,9 +30,24 @@
     {% include "navbar.html" %}    
     <div class="container-fluid">
       <div class="row">
+        <div class="col-md-12">
+          <div class="jumbotron home_jumbotron">
+            <h1>Welcome to GoX</h1>
+            <p>Start your next experience today.</p>
+            <p><a class="btn btn-default btn-lg" href="#" role="button">Sign Up</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+            <h4>Popular Experiences</h4>
+            <hr/>
+        </div>
+      </div>
+      <div class="row">
       {% if experience_list %}
       {% for experience in experience_list %}
-        <div class="col-md-4" style="margin-top: 30px;">
+        <div class="col-md-4">
           {% with 'images/'|add:experience.fields.title|add:'.jpg' as static_image %}
           <a href="{% url 'experienceDetail' experience.pk %}">
           <div class="tile" style="background-image: url('{% static static_image %}');">
