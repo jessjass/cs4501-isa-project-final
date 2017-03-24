@@ -99,7 +99,7 @@
         "firstName": "Bob",
         "lastName": "Builder",
         "username": "bob",
-        "password": "bob",
+        "password": "pbkdf2_sha256$30000$xzPpCOEocaQE$WHm9I9NUxkKHS8fhB8LwDBc0/uFWEXJ6JC40xhHqdtE=",
         "eventsIn": [
             1,
             2
@@ -120,7 +120,7 @@
         "firstName": "Joe",
         "lastName": "Doe",
         "username": "joe",
-        "password": "joe",
+        "password": "pbkdf2_sha256$30000$HDxIpIBylnj6$Jgl1OEbYJrKlzLBBEprH0jltMiDrVDfVqpqU+HgLsIw=",
         "eventsIn": [
             3,
             4
@@ -140,8 +140,8 @@
     "fields": {
         "firstName": "Paul",
         "lastName": "Rudd",
-        "username": "PR",
-        "password": "ruddy",
+        "username": "pr",
+        "password": "pbkdf2_sha256$30000$pVZnwA4ixKq9$DLmpAG7XONMxrUmVbVpFcK4IdmWEcJXTp/Etnk4VJiY=",
         "eventsIn": [
             3,
             4
@@ -160,8 +160,8 @@
     "fields": {
         "firstName": "Alpa",
         "lastName": "Chino",
-        "username": "Alpa",
-        "password": "tropicthunder",
+        "username": "alpa",
+        "password": "pbkdf2_sha256$30000$mKDUPc70fit5$xnizNDRsMlKgRMjiGtz8ruK9yB2KeDSgnRcUJk5oBNs=",
         "eventsIn": [
             3,
             4,

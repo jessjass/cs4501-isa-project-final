@@ -31,6 +31,9 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-offset-4 col-md-4">
+          {% if error == "true" %}
+            <div class="alert alert-danger" role="alert"><b>Error!</b> Incorrect Credentials</div>
+          {% endif %}
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title">Sign In</h3>

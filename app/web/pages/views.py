@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import hashers
+from django.core.urlresolvers import reverse
 
 import urllib.request
 import urllib.parse
@@ -11,6 +12,37 @@ import requests
 from .forms import CreateEventForm, SignInForm, SignUpForm
 
 exp_api = 'http://exp:8000'
+
+def login_required(f):
+    def wrap(request, *args, **kwargs):
+
+        # try authenticating the user
+        user = validate(request)
+
+        # authentication failed
+        if not user:
+            # redirect the user to the login page
+            return HttpResponseRedirect(reverse('signIn'))
+        else:
+            return f(request, *args, **kwargs)
+    return wrap
+
+def validate(request):
+	if 'auth' in request.COOKIES:
+		auth = request.COOKIES['auth']
+		post_data = {}
+		post_data['auth'] = auth
+		try:
+			resp = requests.post(exp_api + "/api/v1/checkUser/" , post_data)
+		except requests.exceptions.RequestException as e:
+			return HttpResponse(e)
+		else:
+			if resp.json()['result'] == "200":
+				return True
+			else: 
+				return False
+	else:
+		return None	
 
 def index(request):
 	context = {}
@@ -28,6 +60,7 @@ def index(request):
 
 	return render(request, 'index.html', context)
 
+@login_required
 def experienceDetail(request, exp_id):
 	context = {}
 	req = urllib.request.Request(exp_api + '/api/v1/experience/' + exp_id + '/')
@@ -102,40 +135,33 @@ def signIn(request):
 
 		if not form.is_valid():
 			context['form'] = form
+			context['error'] = "true"
 			return render(request,'sign_in.html', context)
 
 		username = form.cleaned_data['username']
 		password = form.cleaned_data['password']
-
-		# Not working... not sure why...
-		# next = form.cleaned_data.get('next') or reverse('home')
 		
 		post_data = {
 			'username' : username,
 			'password' : password
 		}
 
-		return JsonResponse(post_data)
+		try:
+			resp = requests.post(exp_api + "/api/v1/signin/" , post_data)
+		except requests.exceptions.RequestException as e:
+			return HttpResponse(e)
+		else:
+			if not resp or resp.json()['result'] != '200':
+				context["error"] = "true"
+				context['form'] = form
+				return render(request,'sign_in.html', context)
+			else:
+				authenticator = resp.json()['auth']
+				newURL = reverse('home')
+				response = HttpResponseRedirect(newURL)
+				response.set_cookie("auth", authenticator)
+				return response
 
-		# NEED TO FINISH EXPERIENCE LAYER TO FINISH REST
-
-		# try:
-		# 	resp = requests.post(exp_api + , post_data)
-		# except requests.exceptions.RequestException as e:
-		# 	return HttpResponse(e)
-		# else:
-		# 	return render()
-
-		# if not resp or not resp['ok']:
-		# 	return render(request,'sign_in.html', context)
-
-		# # ToDo: update resp_json indices
-		# authenticator = resp['resp']['authenticator']
-
-		# response = HttpResponseRedirect(next)
-		# response.set_cookie("auth", authenticator)
-
-		# return response
 
 def createEvent(request):
 	context = {}

@@ -101,6 +101,56 @@ def signUp(request):
 		else:
 			return JsonResponse(resp.json())
 
+def signIn(request):
+	response_data = {}
+	post_data = {}
+
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+
+		post_data['username'] = username
+		post_data['password'] = password
+
+		try:
+			resp = requests.post(models_api + '/api/v1/user/check/', post_data)
+		except requests.exceptions.RequestException as e:
+			return JsonResponse({ "error" : e }, safe=False)
+		else:
+			response = resp.json()
+			if(response['result'] == '200'):
+				try:
+					auth_data = {}
+					auth_data['user_id'] = response['user_id']
+					authresp = requests.post(models_api + '/api/v1/auth/create/', auth_data)
+				except requests.exceptions.RequestException as e:
+					return JsonResponse({ "error" : e }, safe=False)
+				else:
+					response['auth'] = authresp.json()['auth'][0]['pk']
+					return JsonResponse(response)
+			else:
+				return JsonResponse(response)
+
+def checkUserAuth(request):
+	if request.method == 'POST':
+		auth_data = {}
+		auth_data['token'] = request.POST['auth']
+		try:
+			authresp = requests.post(models_api + '/api/v1/auth/check/', auth_data)
+		except requests.exceptions.RequestException as e:
+			return JsonResponse({ "error" : e }, safe=False)
+		else:
+			if(authresp.json()['result'] == '200'):
+				response_data = {}
+				response_data['result'] = "200"
+				response_data['message'] = "OK: User authenticated"
+				return JsonResponse(response_data)
+			else:
+				response_data = {}
+				response_data['result'] = "404"
+				response_data['message'] = "Error: Unknown User"
+				return JsonResponse(response_data)
+
 
 def createEvent(request):
 	response_data = {}
