@@ -84,14 +84,14 @@ def createEvent(request):
 	post_data = {}
 
 	if request.method == 'POST':
-		title = request.POST['inputEventTitle']
-		date = request.POST['inputEventDate']
-		time = request.POST['inputEventTime']
-		price = request.POST['inputEventPrice']
-		description = request.POST['inputEventDescription']
+		title = request.POST['title']
+		date = request.POST['date']
+		time = request.POST['time']
+		price = request.POST['price']
+		description = request.POST['description']
 
 		post_data['title'] = title
-		post_data['datetime'] = date + ' ' + time + ':00'
+		post_data['datetime'] = date + ' ' + time
 		post_data['price'] = price
 		post_data['description'] = description
 

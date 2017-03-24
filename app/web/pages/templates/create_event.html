@@ -36,58 +36,32 @@
               <h3 class="panel-title">Create Event</h3>
             </div>
             <div class="panel-body">
-            <form method="POST" action="{% url 'createEvent' %}">
-            
-              {% csrf_token %}
-              <!-- django form -->
+
+            <form method="post" action="{% url 'createEvent' %}">
+              {% for field in form %}
+              {% if field.name == 'title' or field.name == 'description' %}
               <div class="col-md-12">
                 <div class="form-group">
-                  <label for="inputEventTitle">Title</label>
-                  <input type="text" class="form-control" name="inputEventTitle" id="inputEventTitle" placeholder="What?">
+                  <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                  {{ field }}
                 </div>
               </div>
 
+              {% else %}
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="inputEventDate">Date</label>
-                  <input type="date" class="form-control" name="inputEventDate" id="inputEventDate">
+                  <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                  {{ field }}
                 </div>
               </div>
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="inputEventTime">Time</label>
-                  <input type="time" class="form-control" name="inputEventTime" id="inputEventTime">
-                </div>
-              </div>
-
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="inputEventPrice">Price</label>
-                  <div class="input-group">
-                  <span class="input-group-addon" style="padding:0px 5px 0px 0px">$</span>
-                  <input onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46" step='0.01' value='0.00' placeholder='0.00'  class="form-control" name="inputEventPrice" id="inputEventPrice"/>
-                  </div>
-                </div>
-              </div>
-
+              {% endif %}
+              {% endfor %}
               <div class="col-md-12">
-                <div class="form-group">
-                  <label for="inputEventDescription">Description</label>
-                  <textarea class="form-control" name="inputEventDescription" id="inputEventDescription" placeholder="Describe your event." rows="3"></textarea>
-                </div>
+                <button type="submit" class="btn btn-default">Create</button>
               </div>
-
-<!--               <div class="col-md-12">
-                <div class="form-group">
-                  <label for="exampleInputFileImage">Image Upload</label>
-                  <input type="file" name="exampleInputFileImage" id="exampleInputFileImage" accept=".png,.jpg, .jpeg">
-                  <p class="help-block">Upload an image of your event.</p>
-                </div>
-              </div> -->
-
-              <button type="submit" class="btn btn-default">Create</button>
             </form>
+
             </div>
           </div>
         </div>

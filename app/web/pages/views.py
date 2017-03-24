@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 
-
 import urllib.request
 import urllib.parse
 from urllib.error import URLError
 import json
 import requests
+
+from .forms import CreateEventForm
 
 exp_api = 'http://exp:8000'
 
@@ -47,20 +48,23 @@ def experienceDetail(request, exp_id):
 		return render(request, 'experience_detail.html', context)
 
 def signInPage(request):
-	context = {}
-	return render(request, 'sign_in.html', context)
+	return render(request, 'sign_in.html')
 
 def createEvent(request):
 	context = {}
-
 	if request.method == 'POST':
 
+		form = CreateEventForm(request.POST)
+
+		if not form.is_valid():
+			return render(request, 'create_event.html', context)
+
 		post_data = {
-			'inputEventTitle' : request.POST['inputEventTitle'],
-			'inputEventDescription' : request.POST['inputEventDescription'],
-			'inputEventDate' : request.POST['inputEventDate'],
-			'inputEventTime' : request.POST['inputEventTime'],
-			'inputEventPrice' : request.POST['inputEventPrice']
+			'title' : form.cleaned_data['title'],
+			'description' : form.cleaned_data['description'],
+			'date' : form.cleaned_data['date'],
+			'time' : form.cleaned_data['time'],
+			'price' : form.cleaned_data['price']
 		}
 
 		try:
@@ -71,6 +75,14 @@ def createEvent(request):
 			return JsonResponse(resp.json())
 
 	if request.method == 'GET':
+		form = CreateEventForm()
+		context['form'] = form
+		context['title'] = 'col-md-12'
+		context['description'] = 'col-md-12'
+		context['date'] = 'col-md-4'
+		context['time'] = 'col-md-4'
+		context['price'] = 'col-md-4'
+
 		return render(request, 'create_event.html', context)
 
 def signIn(request):
@@ -78,6 +90,12 @@ def signIn(request):
 		# Send validated information to our experience layer
 		email = request.POST.get("inputEmail")
 		password = request.POST.get("inputPassword")
+
+		post_data = {
+			'inputEmail' : request.POST['inputEmail'],
+			'inputPassword' : request.POST['inputPassword']
+		}
+
 		resp = urllib.request.Request(exp_api + '/api/v1/experience/signin/')
 
 		try:
