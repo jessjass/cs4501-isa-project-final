@@ -79,6 +79,29 @@ def experienceDetail(request, exp_id):
 
 		return JsonResponse(response_data, safe=False)
 
+def signUp(request):
+	response_data = {}
+	post_data = {}
+
+	if request.method == 'POST':
+		firstName = request.POST['firstName']
+		lastName = request.POST['lastName']
+		username = request.POST['username']
+		password = request.POST['password']
+
+		post_data['firstName'] = firstName
+		post_data['lastName'] = lastName
+		post_data['username'] = username
+		post_data['password'] = password
+
+		try:
+			resp = requests.post(models_api + '/api/v1/user/', post_data)
+		except requests.exceptions.RequestException as e:
+			return JsonResponse({ "error" : e }, safe=False)
+		else:
+			return JsonResponse(resp.json())
+
+
 def createEvent(request):
 	response_data = {}
 	post_data = {}

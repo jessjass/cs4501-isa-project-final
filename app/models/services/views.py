@@ -216,6 +216,7 @@ def userAll(request):
 			response_data = {}
 			response_data['result'] = '400'
 			response_data['message'] = 'Bad Request'
+			response_data['errors'] = form.errors
 			return JsonResponse(response_data, safe = False)
 
 def userById(request, user_id):

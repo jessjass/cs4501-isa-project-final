@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.contrib.auth import hashers
 
 import urllib.request
 import urllib.parse
@@ -64,23 +65,30 @@ def signUp(request):
 		username = form.cleaned_data['username']
 		password = form.cleaned_data['password']
 		confirm_password = form.cleaned_data['confirm_password']
-		first_name = form.cleaned_data['first_name']
-		last_name = form.cleaned_data['last_name']
+		firstName = form.cleaned_data['firstName']
+		lastName = form.cleaned_data['lastName']
 
 		if password != confirm_password:
 			context['form'] = form
 			context['passwordError'] = "Passwords do not match"
 			return render(request, 'sign_up.html', context)
 
+
 		post_data = {
 			'username' : username,
-			'password' : password,
-			'first_name' : first_name,
-			'last_name' : last_name
+			'password' : hashers.make_password(password),
+			'firstName' : firstName,
+			'lastName' : lastName
 		}
 
-
-		return JsonResponse(post_data)
+		try:
+			resp = requests.post(exp_api + '/api/v1/signup/', post_data)
+		except requests.exceptions.RequestException as e:
+			return HttpResponse(e)
+		else:
+			resp_data = resp.json()
+			context['firstName'] = resp_data['user'][0]['fields']['firstName']
+			return render(request, 'sign_up_success.html', context)
 
 def signIn(request):
 	context = {}

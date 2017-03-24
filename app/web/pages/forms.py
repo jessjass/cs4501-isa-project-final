@@ -1,7 +1,7 @@
 from django import forms
 
 class SignUpForm(forms.Form):
-	first_name = forms.CharField(
+	firstName = forms.CharField(
 		label="First Name",
 		max_length=20,
 		widget=forms.TextInput(
@@ -10,7 +10,7 @@ class SignUpForm(forms.Form):
 			'placeholder':'First Name'
 			}))
 		
-	last_name = forms.CharField(
+	lastName = forms.CharField(
 		label="Last Name",
 		max_length=20,
 		widget=forms.TextInput(
