@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 
 import urllib.request
 import urllib.parse
@@ -7,7 +7,7 @@ from urllib.error import URLError
 import json
 import requests
 
-from .forms import CreateEventForm
+from .forms import CreateEventForm, SignInForm
 
 exp_api = 'http://exp:8000'
 
@@ -47,13 +47,55 @@ def experienceDetail(request, exp_id):
 	else:
 		return render(request, 'experience_detail.html', context)
 
-def signInPage(request):
-	return render(request, 'sign_in.html')
+def signIn(request):
+	context = {}
+	if request.method == 'GET':
+		form = SignInForm()
+		context['form'] = form
+		return render(request, 'sign_in.html', context)
+
+	if request.method == 'POST':
+		form = SignInForm(request.POST)
+
+		if not form.is_valid():
+			return render(request,'sign_in.html', context)
+
+		email = form.cleaned_data['email']
+		password = form.cleaned_data['password']
+
+		# Not working... not sure why...
+		# next = form.cleaned_data.get('next') or reverse('home')
+		
+		post_data = {
+			'email' : email,
+			'password' : password
+		}
+
+		return JsonResponse(post_data)
+
+		# NEED TO FINISH EXPERIENCE LAYER TO FINISH REST
+
+		# try:
+		# 	resp = requests.post(exp_api + , post_data)
+		# except requests.exceptions.RequestException as e:
+		# 	return HttpResponse(e)
+		# else:
+		# 	return render()
+
+		# if not resp or not resp['ok']:
+		# 	return render(request,'sign_in.html', context)
+
+		# # ToDo: update resp_json indices
+		# authenticator = resp['resp']['authenticator']
+
+		# response = HttpResponseRedirect(next)
+		# response.set_cookie("auth", authenticator)
+
+		# return response
 
 def createEvent(request):
 	context = {}
 	if request.method == 'POST':
-
 		form = CreateEventForm(request.POST)
 
 		if not form.is_valid():
@@ -72,7 +114,7 @@ def createEvent(request):
 		except requests.exceptions.RequestException as e:
 			return HttpResponse(e)
 		else:
-			return JsonResponse(resp.json())
+			return render(request, 'create_event_success.html', context)
 
 	if request.method == 'GET':
 		form = CreateEventForm()
@@ -84,44 +126,3 @@ def createEvent(request):
 		context['price'] = 'col-md-4'
 
 		return render(request, 'create_event.html', context)
-
-def signIn(request):
-	if request.method == 'POST':
-		# Send validated information to our experience layer
-		email = request.POST.get("inputEmail")
-		password = request.POST.get("inputPassword")
-
-		post_data = {
-			'inputEmail' : request.POST['inputEmail'],
-			'inputPassword' : request.POST['inputPassword']
-		}
-
-		resp = urllib.request.Request(exp_api + '/api/v1/experience/signin/')
-
-		try:
-			resp_json = urllib.request.urlopen(req)
-		except URLError as e:
-			# ToDo: Add response redirects to 'login error' page
-
-			# URLError
-			if hasattr(e, 'reason'):
-				response_data['result'] = "400"
-				response_data['message'] = 'We failed to reach a server. Reason: ' + e.reason
-			# HTTPError
-			elif hasattr(e, 'code'):
-				response_data['result'] = e.code # error code
-				response_data['message'] = 'The server couldn\'t fulfill the request.'
-		else:
-
-			""" If we made it here, we can log them in. """
-			# Set their login cookie and redirect to back to wherever they came from
-			
-			# ToDo: update resp_json indices
-			authenticator = resp_json['resp']['authenticator']
-
-			# response to return to home
-			response = HttpResponseRedirect(exp_api + '/api/v1/')
-			response.set_cookie("auth", authenticator, max_age=3600)
-
-	# return to index page
-	return response
