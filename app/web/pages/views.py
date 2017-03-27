@@ -82,7 +82,7 @@ def index(request):
 	return render(request, 'index.html', context)
 
 @login_required
-def experienceDetail(request, exp_id, **kwargs):
+def experienceDetail(request, exp_id, user):
 	context = {}
 	# req = urllib.request.Request(exp_api + '/api/v1/experience/' + exp_id + '/')
 	
@@ -169,7 +169,9 @@ def signOut(request):
 			return HttpResponse(e)
 		else:
 			if resp.json()['result'] == "200":
-				return redirect('home')
+				response = redirect('home')
+				response.delete_cookie('auth')
+				return response
 			else: 
 				return redirect('home')
 				
@@ -215,7 +217,7 @@ def signIn(request):
 				return response
 
 @login_required
-def createEvent(request):
+def createEvent(request, user):
 	context = {}
 	if request.method == 'POST':
 		form = CreateEventForm(request.POST)
