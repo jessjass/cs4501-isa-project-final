@@ -5,7 +5,8 @@
     "fields": {
         "title": "Friday Fun",
         "description": "Lunch and a movie.",
-        "totalPrice": "20.00"
+        "totalPrice": "20.00",
+        "createdBy":1
     }
 },
 {
@@ -14,7 +15,8 @@
     "fields": {
         "title": "Weekend Adventure",
         "description": "Hiking then breweries.",
-        "totalPrice": "20.00"
+        "totalPrice": "20.00",
+        "createdBy":2
     }
 },
 {
@@ -23,7 +25,8 @@
     "fields": {
         "title": "Winter getaway",
         "description": "Snowshoe",
-        "totalPrice": "350.00"
+        "totalPrice": "350.00",
+        "createdBy":3
     }
 },
 {
@@ -34,7 +37,8 @@
         "price": "10.00",
         "title": "Lunch at Citizen Burger",
         "description": "Grab a bite before the movie.",
-        "experience": 1
+        "experience": 1,
+        "createdBy":1
     }
 },
 {
@@ -45,7 +49,8 @@
         "price": "10.00",
         "title": "Movie Downtown",
         "description": "La La Land",
-        "experience": 1
+        "experience": 1,
+        "createdBy":1
     }
 },
 {
@@ -56,7 +61,8 @@
         "price": "0.00",
         "title": "Wintergreen Ski Resort",
         "description": "Great views, great times.",
-        "experience": 2
+        "experience": 2,
+        "createdBy":2
     }
 },
 {
@@ -67,7 +73,8 @@
         "price": "20.00",
         "title": "Breweries",
         "description": "DB or Blue Mountain or Bold Rock.",
-        "experience": 2
+        "experience": 2,
+        "createdBy":2
     }
 },
 {
@@ -78,7 +85,8 @@
         "price": "20.00",
         "title": "Drive to SnowShoe",
         "description": "3 hour drive to the cabin",
-        "experience": 3
+        "experience": 3,
+        "createdBy":3
     }
 },
 {
@@ -89,7 +97,8 @@
         "price": "20.00",
         "title": "Skiing all day",
         "description": "Or you can just chill at the cabin",
-        "experience": 3
+        "experience": 3,
+        "createdBy":3
     }
 },
 {
