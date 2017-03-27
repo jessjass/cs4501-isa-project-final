@@ -52,7 +52,7 @@ def validate(request):
 			else: 
 				return False
 	else:
-		return False	
+		return False
 
 def index(request):
 	context = {}
@@ -169,8 +169,9 @@ def signIn(request):
 				return render(request,'sign_in.html', context)
 			else:
 				authenticator = resp.json()['auth']
-				newURL = reverse('home')
-				response = HttpResponseRedirect(newURL)
+				# newURL = reverse('home')
+				# response = HttpResponseRedirect(newURL)
+				response = redirect('home')
 				response.set_cookie("auth", authenticator)
 				return response
 
