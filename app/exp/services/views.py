@@ -185,6 +185,17 @@ def checkUserAuth(request):
 				response_data['message'] = "Error: Unknown User"
 				return JsonResponse(response_data)
 
+def userDashboard(request, user_id):
+	response_data = {}
+	
+	if request.method == 'GET':
+		try:
+			resp = requests.get(models_api + '/api/v1/event?createdBy=' + user_id)
+		except requests.exceptions.RequestException as e:
+			return JsonResponse({ "error" : e }, safe=False)
+		else:
+			response_data['event_list'] = resp.json()
+			return JsonResponse(response_data['event_list'])
 
 def createEvent(request):
 	response_data = {}
@@ -196,14 +207,13 @@ def createEvent(request):
 		time = request.POST['time']
 		price = request.POST['price']
 		description = request.POST['description']
+		createdBy = request.POST['createdBy']
 
 		post_data['title'] = title
 		post_data['datetime'] = date + ' ' + time
 		post_data['price'] = price
 		post_data['description'] = description
-
-		# Fix this to add user who is creating this event
-		# post_data['createdBy'] = 
+		post_data['createdBy'] = createdBy
 
 		try:
 			resp = requests.post(models_api + '/api/v1/event/', post_data)

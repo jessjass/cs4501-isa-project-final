@@ -37,6 +37,8 @@
             {% if not auth %}
             <p><a class="btn btn-default btn-lg" href="{% url 'signUp' %}" role="button">Sign Up</a>
             <a class="btn btn-default btn-lg" href="{% url 'signIn' %}" role="button">Sign In</a></p>
+            {% else %}
+            <p><a class="btn btn-default btn-lg" href="{% url 'userDashboard' %}" role="button">View Dashboard</a></p>
             {% endif %}
           </div>
         </div>

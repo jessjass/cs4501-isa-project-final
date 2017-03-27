@@ -160,6 +160,8 @@ def signUp(request):
 def signOut(request):
 	context = {}
 	if request.method == 'GET':
+		if 'auth' not in request.COOKIES:
+			return redirect('home')
 		auth = request.COOKIES['auth']
 		post_data = {}
 		post_data['auth'] = auth
@@ -210,11 +212,23 @@ def signIn(request):
 				return render(request,'sign_in.html', context)
 			else:
 				authenticator = resp.json()['auth']
-				# newURL = reverse('home')
-				# response = HttpResponseRedirect(newURL)
 				response = redirect('home')
 				response.set_cookie("auth", authenticator)
 				return response
+
+@login_required
+def userDashboard(request, user):
+	context = {}
+	if request.method == 'GET':
+		context['auth'] = user['user'][0]['fields']
+		user_id = user['user'][0]['pk']
+		try:
+			resp = requests.get(exp_api + '/api/v1/user/dashboard/' + str(user_id) + '/')
+		except requests.exceptions.RequestException as e:
+			return HttpResponse(e)
+		else:
+			context['event_list'] = resp.json()['event_list']
+			return render(request, 'user_dashboard.html', context)
 
 @login_required
 def createEvent(request, user):
@@ -231,7 +245,8 @@ def createEvent(request, user):
 			'description' : form.cleaned_data['description'],
 			'date' : form.cleaned_data['date'],
 			'time' : form.cleaned_data['time'],
-			'price' : form.cleaned_data['price']
+			'price' : form.cleaned_data['price'],
+			'createdBy' : user['user'][0]['pk']
 		}
 
 		try:
@@ -239,7 +254,9 @@ def createEvent(request, user):
 		except requests.exceptions.RequestException as e:
 			return HttpResponse(e)
 		else:
-			return render(request, 'create_event_success.html', context)
+			context['auth'] = user['user'][0]['fields']
+			return redirect('userDashboard')
+			# return render(request, 'create_event_success.html', context)
 
 	if request.method == 'GET':
 		form = CreateEventForm()
@@ -250,4 +267,5 @@ def createEvent(request, user):
 		context['time'] = 'col-md-4'
 		context['price'] = 'col-md-4'
 
+		context['auth'] = user['user'][0]['fields']
 		return render(request, 'create_event.html', context)

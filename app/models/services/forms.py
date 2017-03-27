@@ -6,7 +6,7 @@ from .models import Experience, Event, User
 class EventForm(ModelForm):
 	class Meta:
 		model = Event
-		fields = ['title', 'description', 'datetime', 'price']
+		fields = ['title', 'description', 'datetime', 'price', 'createdBy']
 
 class EventFormUpdate(ModelForm):
 	class Meta:

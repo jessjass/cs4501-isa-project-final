@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^v1/signup/$', views.signUp),
     url(r'^v1/signin/$', views.signIn),
     url(r'^v1/signout/$', views.signOut),
-    url(r'^v1/checkUser/$', views.checkUserAuth)
+    url(r'^v1/checkUser/$', views.checkUserAuth),
+    url(r'^v1/user/dashboard/(?P<user_id>[0-9]+)/$', views.userDashboard),
 ]

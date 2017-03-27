@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^signin/$', views.signIn, name='signIn'),
     url(r'^signup/$', views.signUp, name='signUp'),
     url(r'^signout/$', views.signOut, name='signOut'),
+    url(r'^user/dashboard/$', views.userDashboard, name='userDashboard'),
 ]

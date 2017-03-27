@@ -21,7 +21,7 @@
           <li><a href="{% url 'home' %}">Welcome, {{ auth.firstName }}!</a></li>
           <li><a href="{% url 'signOut' %}">Sign Out</a></li>
         {% else %}
-        <li><a href="{% url 'signIn' %}">Sign In</a></li>
+          <li><a href="{% url 'signIn' %}">Sign In</a></li>
         {% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->
