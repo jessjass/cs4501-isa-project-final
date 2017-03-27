@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^event/create/$', views.createEvent, name='createEvent'),
     url(r'^signin/$', views.signIn, name='signIn'),
     url(r'^signup/$', views.signUp, name='signUp'),
+    url(r'^signout/$', views.signOut, name='signOut'),
 ]

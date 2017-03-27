@@ -157,6 +157,22 @@ def signUp(request):
 			context['firstName'] = resp_data['user'][0]['fields']['firstName']
 			return render(request, 'sign_up_success.html', context)
 
+def signOut(request):
+	context = {}
+	if request.method == 'GET':
+		auth = request.COOKIES['auth']
+		post_data = {}
+		post_data['auth'] = auth
+		try:
+			resp = requests.post(exp_api + "/api/v1/signout/", post_data)
+		except requests.exceptions.RequestException as e:
+			return HttpResponse(e)
+		else:
+			if resp.json()['result'] == "200":
+				return redirect('home')
+			else: 
+				return redirect('home')
+				
 @anonymous_user
 def signIn(request):
 	context = {}

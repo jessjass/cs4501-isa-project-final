@@ -118,6 +118,20 @@ def signUp(request):
 		else:
 			return JsonResponse(resp.json())
 
+def signOut(request):
+	response_data = {}
+	post_data = {}
+
+	if request.method == 'POST':
+		post_data['token'] = request.POST['auth']
+
+		try:
+			resp = requests.post(models_api + '/api/v1/auth/remove/', post_data)
+		except requests.exceptions.RequestException as e:
+			return JsonResponse({ "error" : e }, safe=False)
+		else:
+			return JsonResponse(resp.json())
+
 def signIn(request):
 	response_data = {}
 	post_data = {}

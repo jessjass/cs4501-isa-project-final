@@ -520,6 +520,26 @@ def checkAuth(request):
 				response_data['message'] = 'OK: Successful'
 				return JsonResponse(response_data, safe = False)
 
+def removeAuth(request):
+	
+	if request.method == 'POST':
+		token = request.POST['token']
+		response_data = {}
+
+		try:
+			auth = Authenticator.objects.get(pk = token)
+		except ObjectDoesNotExist:
+			response_data['result'] = '404'
+			response_data['message'] = token
+			return JsonResponse(response_data, safe = False)
+		else:
+			auth.delete()
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			return JsonResponse(response_data, safe = False)
+
+
+
 def checkUser(request):
 	if request.method == 'POST':
 

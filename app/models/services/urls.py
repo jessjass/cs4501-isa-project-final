@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^v1/user/check/$', views.checkUser),
     url(r'^v1/user/auth/$', views.getUserByAuth),
     url(r'^v1/auth/create/$', views.createAuth),
-    url(r'^v1/auth/check/$', views.checkAuth)
+    url(r'^v1/auth/check/$', views.checkAuth),
+    url(r'^v1/auth/remove/$', views.removeAuth)
 ]
