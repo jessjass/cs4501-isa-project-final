@@ -118,7 +118,7 @@ def signIn(request):
 			return JsonResponse({ "error" : e }, safe=False)
 		else:
 			response = resp.json()
-			if(response['result'] == '200'):
+			if response['result'] == '200':
 				try:
 					auth_data = {}
 					auth_data['user_id'] = response['user_id']

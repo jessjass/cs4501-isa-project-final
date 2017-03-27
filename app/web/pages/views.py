@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import hashers
 from django.core.urlresolvers import reverse
@@ -22,10 +22,20 @@ def login_required(f):
         # authentication failed
         if not user:
             # redirect the user to the login page
-            return HttpResponseRedirect(reverse('signIn'))
+            return redirect('signIn')
         else:
             return f(request, *args, **kwargs)
     return wrap
+
+def anonymous_user(f):
+	def wrap(request, *args, **kwargs):
+		user = validate(request)
+
+		if user:
+			return redirect('home')
+		else:
+			return f(request, *args, **kwargs)
+	return wrap
 
 def validate(request):
 	if 'auth' in request.COOKIES:
@@ -42,7 +52,7 @@ def validate(request):
 			else: 
 				return False
 	else:
-		return None	
+		return False	
 
 def index(request):
 	context = {}
@@ -81,9 +91,11 @@ def experienceDetail(request, exp_id):
 	else:
 		return render(request, 'experience_detail.html', context)
 
+@anonymous_user
 def signUp(request):
 	context = {}
 	if request.method == 'GET':
+
 		form = SignUpForm()
 		context['form'] = form
 		return render(request, 'sign_up.html', context)
@@ -106,7 +118,6 @@ def signUp(request):
 			context['passwordError'] = "Passwords do not match"
 			return render(request, 'sign_up.html', context)
 
-
 		post_data = {
 			'username' : username,
 			'password' : hashers.make_password(password),
@@ -123,6 +134,7 @@ def signUp(request):
 			context['firstName'] = resp_data['user'][0]['fields']['firstName']
 			return render(request, 'sign_up_success.html', context)
 
+@anonymous_user
 def signIn(request):
 	context = {}
 	if request.method == 'GET':
@@ -162,7 +174,7 @@ def signIn(request):
 				response.set_cookie("auth", authenticator)
 				return response
 
-
+@login_required
 def createEvent(request):
 	context = {}
 	if request.method == 'POST':

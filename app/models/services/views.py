@@ -431,15 +431,6 @@ def removeUser(request):
 			response_data['message'] = 'OK: Successful'
 			return JsonResponse(response_data, safe = False)
 
-# def createUser(request):
-
-# 	if request.method == 'POST':
-# 		if 'email' not in request.POST or 'password' not in request.POST:
-# 			return _error_response(request, "missing required fields")
-
-# 	else:
-# 		return _error_response(request, "must make POST request")
-
 def createAuth(request):
 	
 	if request.method == 'GET':
@@ -513,14 +504,13 @@ def checkAuth(request):
 			response_data['message'] = token
 			return JsonResponse(response_data, safe = False)
 
-		else:
+		else:	
 			response_data = {}
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
 			return JsonResponse(response_data, safe = False)
 
 def checkUser(request):
-
 	if request.method == 'POST':
 
 		response_data = {}

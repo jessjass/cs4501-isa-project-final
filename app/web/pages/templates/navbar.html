@@ -17,8 +17,8 @@
         <li><a href="{% url 'home' %}">Experiences</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right" >
-        {% if currentUser %}
-          <li><a href="">Welcome, {{ currentUser.0.fields.firstName }}!</a></li>
+        {% if auth %}
+          <li><a href="">Welcome, Signed In User!</a></li>
         {% else %}
         <li><a href="{% url 'signIn' %}">Sign In</a></li>
         {% endif %}
