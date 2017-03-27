@@ -208,12 +208,20 @@ def userAll(request):
 		form = UserForm(request.POST)
 
 		if form.is_valid():
-			e = form.save()
-			response_data = {}
-			response_data['result'] = '200'
-			response_data['message'] = 'OK: Successful'
-			response_data['user'] = json.loads(serializers.serialize("json", [e,]))
-			return JsonResponse(response_data, safe = False)
+			try:
+				theUser = User.objects.get(username=request.POST['username'])
+			except ObjectDoesNotExist:
+				e = form.save()
+				response_data = {}
+				response_data['result'] = '200'
+				response_data['message'] = 'OK: Successful'
+				response_data['user'] = json.loads(serializers.serialize("json", [e,]))
+				return JsonResponse(response_data, safe = False)
+			else:
+				response_data = {}
+				response_data['result'] = '404'
+				response_data['message'] = 'Username already exists'
+				return JsonResponse(response_data, safe = False)
 		else:
 			response_data = {}
 			response_data['result'] = '400'

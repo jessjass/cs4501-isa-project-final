@@ -33,6 +33,8 @@
         <div class="col-md-offset-4 col-md-4">
           {% if error == "true" %}
             <div class="alert alert-danger" role="alert"><b>Error!</b> Incorrect Credentials</div>
+          {% elif error == "newuser" %}
+            <div class="alert alert-success" role="alert">Congrats, {{ firstName }}! You've signed up successfully! Sign in below</div>
           {% endif %}
           <div class="panel panel-default">
             <div class="panel-heading">

@@ -153,9 +153,22 @@ def signUp(request):
 		except requests.exceptions.RequestException as e:
 			return HttpResponse(e)
 		else:
-			resp_data = resp.json()
-			context['firstName'] = resp_data['user'][0]['fields']['firstName']
-			return render(request, 'sign_up_success.html', context)
+			if resp.json()['result'] == '404':
+				context["error"] = "exists"
+				context['form'] = form
+				return render(request,'sign_up.html', context)
+			if not resp or resp.json()['result'] != '200':
+				context["error"] = "true"
+				context['form'] = form
+				return render(request,'sign_up.html', context)
+			else:
+				resp_data = resp.json()
+				form = SignInForm()
+				context['form'] = form
+				context['firstName'] = resp_data['user'][0]['fields']['firstName']
+				context["error"] = "newuser"
+				return render(request, 'sign_in.html', context)
+				# return render(request, 'sign_up_success.html', context)
 
 def signOut(request):
 	context = {}
