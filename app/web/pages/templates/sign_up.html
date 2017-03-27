@@ -38,7 +38,12 @@
           {% endif %}
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">Sign Up</h3>
+              <div class="panel-heading clearfix">
+                <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Sign Up</h4>
+                <div class="btn-group pull-right">
+                  <a href="{% url 'home' %}" class="btn btn-default btn-sm">Back</a>
+                </div>
+              </div>
             </div>
             <div class="panel-body">
               <form method="post" action="{% url 'signUp' %}">
