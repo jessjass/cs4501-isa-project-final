@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import hashers
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, resolve
 
 import urllib.request
 import urllib.parse
@@ -15,15 +15,15 @@ exp_api = 'http://exp:8000'
 
 def login_required(f):
     def wrap(request, *args, **kwargs):
-
         # try authenticating the user
         user = validate(request)
-
+		
         # authentication failed
         if not user:
             # redirect the user to the login page
             return redirect('signIn')
         else:
+            kwargs['user'] = user
             return f(request, *args, **kwargs)
     return wrap
 
@@ -48,7 +48,7 @@ def validate(request):
 			return HttpResponse(e)
 		else:
 			if resp.json()['result'] == "200":
-				return True
+				return resp.json()['user']
 			else: 
 				return False
 	else:
@@ -56,35 +56,58 @@ def validate(request):
 
 def index(request):
 	context = {}
-	req = urllib.request.Request(exp_api + '/api/v1/')
+	# req = urllib.request.Request(exp_api + '/api/v1/')
 	
 	try:
-		resp_json = urllib.request.urlopen(req)
+		if 'auth' in request.COOKIES:
+			authCookie = request.COOKIES['auth']
+			cookie = dict(auth=authCookie)
+			resp_json = requests.get(exp_api + '/api/v1/', cookies=cookie)
+		else:
+			resp_json = requests.get(exp_api + '/api/v1/')
 	except URLError as e:
 		context['experience_list'] = []
 	else:
-		resp_json = resp_json.read().decode('utf-8')
-		resp = json.loads(resp_json)
+		# resp_json = resp_json.read().decode('utf-8')
+		# resp = json.loads(resp_json)
+		resp = resp_json.json()
 		context['experience_list'] = resp['experience']
-		# context['currentUser'] = resp['currentUser']
+		if(resp['currentUser']['result'] == '200'):
+			currentUser = resp['currentUser']['user'][0]['fields']
+			userData = {}
+			userData['firstName'] = currentUser['firstName']
+			userData['lastName'] = currentUser['lastName']
+			context['auth'] = userData
 
 	return render(request, 'index.html', context)
 
 @login_required
-def experienceDetail(request, exp_id):
+def experienceDetail(request, exp_id, **kwargs):
 	context = {}
-	req = urllib.request.Request(exp_api + '/api/v1/experience/' + exp_id + '/')
+	# req = urllib.request.Request(exp_api + '/api/v1/experience/' + exp_id + '/')
 	
 	try:
-		resp_json = urllib.request.urlopen(req)
+		# resp_json = urllib.request.urlopen(req)
+		if 'auth' in request.COOKIES:
+			authCookie = request.COOKIES['auth']
+			cookie = dict(auth=authCookie)
+			resp_json = requests.get(exp_api + '/api/v1/experience/' + exp_id +'/', cookies=cookie)
+		else:
+			resp_json = requests.get(exp_api + '/api/v1/experience/' + exp_id + '/')
 	except URLError as e:
 		context['experience_events'] = []
 	else:
-		resp_json = resp_json.read().decode('utf-8')
-		resp = json.loads(resp_json)
+		# resp_json = resp_json.read().decode('utf-8')
+		# resp = json.loads(resp_json)
+		resp = resp_json.json()
 		context['experience_events'] = resp['experience_events']
-		context['currentUser'] = resp['currentUser']
-	
+		if(resp['currentUser']['result'] == '200'):
+			currentUser = resp['currentUser']['user'][0]['fields']
+			userData = {}
+			userData['firstName'] = currentUser['firstName']
+			userData['lastName'] = currentUser['lastName']
+			context['auth'] = userData
+
 	if context['experience_events'] == []:
 		context['exp_id'] = exp_id
 		return render(request, 'experience_detail_error.html', context)

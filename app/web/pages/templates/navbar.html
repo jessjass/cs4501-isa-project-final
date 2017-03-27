@@ -18,7 +18,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right" >
         {% if auth %}
-          <li><a href="">Welcome, Signed In User!</a></li>
+          <li><a href="">Welcome, {{ auth.firstName }}!</a></li>
         {% else %}
         <li><a href="{% url 'signIn' %}">Sign In</a></li>
         {% endif %}

@@ -34,8 +34,10 @@
           <div class="jumbotron home_jumbotron">
             <h1>Welcome to GoX</h1>
             <p>Start your next experience today.</p>
+            {% if not auth %}
             <p><a class="btn btn-default btn-lg" href="{% url 'signUp' %}" role="button">Sign Up</a>
             <a class="btn btn-default btn-lg" href="{% url 'signIn' %}" role="button">Sign In</a></p>
+            {% endif %}
           </div>
         </div>
       </div>

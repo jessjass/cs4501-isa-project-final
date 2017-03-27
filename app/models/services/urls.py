@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^v1/user/friend/(?P<user_id>[0-9]+)/$', views.addFriendUserById),
     url(r'^v1/user/remove/$', views.removeUser),
     url(r'^v1/user/check/$', views.checkUser),
+    url(r'^v1/user/auth/$', views.getUserByAuth),
     url(r'^v1/auth/create/$', views.createAuth),
     url(r'^v1/auth/check/$', views.checkAuth)
 ]

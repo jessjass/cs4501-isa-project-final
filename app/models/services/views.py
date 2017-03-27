@@ -2,6 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import hashers
+from django.utils import timezone
 
 import json, os, hmac, datetime
 from django.conf import settings
@@ -505,10 +506,19 @@ def checkAuth(request):
 			return JsonResponse(response_data, safe = False)
 
 		else:	
-			response_data = {}
-			response_data['result'] = '200'
-			response_data['message'] = 'OK: Successful'
-			return JsonResponse(response_data, safe = False)
+			date = auth.date_created
+			currentDate = timezone.now() + timezone.timedelta(days=3)
+			time = (currentDate - date).seconds/3600
+			# response_data['time'] = time, date, currentDate, (currentDate - date).seconds
+			if(time >= 1):
+				auth.delete()
+				response_data['result'] = '404'
+				response_data['message'] = token
+				return JsonResponse(response_data, safe = False)
+			else:
+				response_data['result'] = '200'
+				response_data['message'] = 'OK: Successful'
+				return JsonResponse(response_data, safe = False)
 
 def checkUser(request):
 	if request.method == 'POST':
@@ -535,3 +545,29 @@ def checkUser(request):
 			response_data['result'] = '400'
 			response_data['message'] = 'Bad Request'
 			return JsonResponse(response_data, safe = False)
+
+def getUserByAuth(request):
+
+	if request.method == 'POST':
+		if 'token' not in request.POST:
+			response_data = {}
+			response_data['result'] = '404'
+			response_data['message'] = "No token given"
+			return JsonResponse(response_data, safe = False) 
+		else:
+			token = request.POST["token"]
+			try:
+				auth = Authenticator.objects.get(pk = token)	
+			except ObjectDoesNotExist:
+				response_data = {}
+				response_data['result'] = '404'
+				response_data['message'] = token
+				return JsonResponse(response_data, safe = False)
+			else:	
+				user_id = auth.user_id
+				current_user=User.objects.get(pk = user_id)
+				response_data={}
+				response_data['result'] = '200'
+				response_data['message'] = 'OK: Successful'
+				response_data['user'] = json.loads(serializers.serialize("json", [current_user]))
+				return JsonResponse(response_data, safe = False)
