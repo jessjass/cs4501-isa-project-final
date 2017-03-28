@@ -515,10 +515,10 @@ def checkAuth(request):
 
 		else:	
 			date = auth.date_created
-			currentDate = timezone.now() + timezone.timedelta(days=3)
+			currentDate = timezone.now()
 			time = (currentDate - date).seconds/3600
-			# response_data['time'] = time, date, currentDate, (currentDate - date).seconds
-			if(time >= 1):
+			days = (currentDate - date).days
+			if(time >= 1 or days > 0):
 				auth.delete()
 				response_data['result'] = '404'
 				response_data['message'] = token
@@ -592,10 +592,21 @@ def getUserByAuth(request):
 				response_data['message'] = token
 				return JsonResponse(response_data, safe = False)
 			else:	
-				user_id = auth.user_id
-				current_user=User.objects.get(pk = user_id)
-				response_data={}
-				response_data['result'] = '200'
-				response_data['message'] = 'OK: Successful'
-				response_data['user'] = json.loads(serializers.serialize("json", [current_user]))
-				return JsonResponse(response_data, safe = False)
+				date = auth.date_created
+				currentDate = timezone.now()
+				time = (currentDate - date).seconds/3600
+				days = (currentDate - date).days
+				if(time >= 1 or days > 0):
+					auth.delete()
+					response_data = {}
+					response_data['result'] = '404'
+					response_data['message'] = token
+					return JsonResponse(response_data, safe = False)
+				else:
+					user_id = auth.user_id
+					current_user=User.objects.get(pk = user_id)
+					response_data={}
+					response_data['result'] = '200'
+					response_data['message'] = 'OK: Successful'
+					response_data['user'] = json.loads(serializers.serialize("json", [current_user]))
+					return JsonResponse(response_data, safe = False)

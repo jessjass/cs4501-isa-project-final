@@ -15,9 +15,9 @@ class TestAuth(TestCase):
             firstName='bill', lastName='billy', username = 'bbills', password=hashers.make_password('bumblebee'))
         self.user3 = User.objects.create(
             firstName='brad', lastName='red', username = 'plate', password=hashers.make_password('crazy'))
-        self.auth1 = Authenticator.objects.create(user_id = 'darwin', authenticator = 'fklsjflsfkj')
-        self.auth2 = Authenticator.objects.create(user_id = 'plato', authenticator = 'dfjsdjdjf')
-        self.auth3 = Authenticator.objects.create(user_id = 'plate', authenticator = 'dfjsdjdj')
+        self.auth1 = Authenticator.objects.create(user_id = self.user1.pk, authenticator = 'fklsjflsfkj')
+        self.auth2 = Authenticator.objects.create(user_id = self.user2.pk, authenticator = 'dfjsdjdjf')
+        self.auth3 = Authenticator.objects.create(user_id = self.user3.pk, authenticator = 'dfjsdjdj')
 
     def testCreateAuthNew(self):
         form = {
