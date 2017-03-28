@@ -15,7 +15,9 @@ class TestEvent(TestCase):
 			title="Eat tacos", description="We eat tacos", price=9.99, datetime="2017-03-01T12:00:00Z", experience=self.testExperience)
 		self.testEvent3 = Event.objects.create(
 			title="Got to concert", description="Kendrick Lamar", price=79.99, datetime="2017-03-01T12:00:00Z", experience=self.testExperience)
-		pass
+		self.user1 = User.objects.create(
+            firstName='bob', lastName='builder', username = 'bobbuilds', password='cool_stuff')
+		# pass
 
 	def testGetAllEvents(self):
 		''' Test for getting all events '''
@@ -38,19 +40,20 @@ class TestEvent(TestCase):
 		self.assertEqual(resp['result'], '404')
 		self.assertEqual(resp['message'], 'Not Found: Event item not found')
 
-	# def testAddEvent(self):
-	# 	''' Test for creating an event '''
-	# 	form = {
-	# 		'title' : 'Watching a movie',
-	# 		'description' : 'Logan 8pm Regal Stonefield',
-	# 		'price' : 12.50,
-	# 		'datetime' : '2017-03-01 12:00:00'
-	# 	}
+	def testAddEvent(self):
+		''' Test for creating an event '''
+		form = {
+			'title' : 'Watching a movie',
+			'description' : 'Logan 8pm Regal Stonefield',
+			'price' : 12.50,
+			'datetime' : '2017-03-01 12:00:00',
+			'createdBy' : self.user1.pk
+		}
 
-	# 	resp = self.client.post('/api/v1/event/', form).json()
+		resp = self.client.post('/api/v1/event/', form).json()
 
-	# 	self.assertEqual(resp['result'], '200')
-	# 	self.assertEqual(resp['event'][0]['fields']['title'], form['title'])
+		self.assertEqual(resp['result'], '200')
+		self.assertEqual(resp['event'][0]['fields']['title'], form['title'])
 
 	def testGetEventByExperience(self):
 		''' Test for getting all events in an experience '''
