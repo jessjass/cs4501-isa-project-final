@@ -31,42 +31,8 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <div class="jumbotron home_jumbotron">
-            <h1>Welcome to GoX</h1>
-            <p>Start your next experience today.</p>
-            {% if not auth %}
-            <p><a class="btn btn-default btn-lg" href="{% url 'signUp' %}" role="button">Sign Up</a>
-            <a class="btn btn-default btn-lg" href="{% url 'signIn' %}" role="button">Sign In</a></p>
-            {% else %}
-            <p><a class="btn btn-default btn-lg" href="{% url 'userDashboard' %}" role="button">View Dashboard</a></p>
-            {% endif %}
-          </div>
+          <h4>Your event has been created successfully!</h4>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-            <h4>Popular Experiences</h4>
-            <hr/>
-        </div>
-      </div>
-      <div class="row">
-      {% if experience_list %}
-      {% for experience in experience_list %}
-        <div class="col-md-4">
-          {% with 'images/'|add:experience.fields.title|add:'.jpg' as static_image %}
-          <a href="{% url 'experienceDetail' experience.pk %}">
-          <div class="tile" style="background-image: url('{% static static_image %}');">
-            <div class="tile-description">
-              <h3>{{ experience.fields.title }}</h3>
-              <hr class="tile-divider"/>
-              <p>{{ experience.fields.description }} | ${{ experience.fields.totalPrice }}</p>
-            </div>
-          </div>
-          </a>
-          {% endwith %}
-        </div>
-      {% endfor %}
-      {% endif %}
       </div>
     </div>
 

@@ -6,7 +6,7 @@ from .models import Experience, Event, User
 class EventForm(ModelForm):
 	class Meta:
 		model = Event
-		fields = ['title', 'description', 'datetime', 'price']
+		fields = ['title', 'description', 'datetime', 'price', 'createdBy']
 
 class EventFormUpdate(ModelForm):
 	class Meta:
@@ -34,3 +34,8 @@ class UserFormUpdateEvent(forms.Form):
 class UserFormUpdateFriend(forms.Form):
 	user_id = forms.CharField(max_length = 1000000)
 	remove = forms.CharField(max_length=10)
+
+class UserFormCheckUser(ModelForm):
+	class Meta:
+		model = User
+		fields = ['username','password']

@@ -1,11 +1,14 @@
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import hashers
+from django.utils import timezone
 
-import json
+import json, os, hmac, datetime
+from django.conf import settings
 
-from .models import Event, Experience, User
-from .forms import EventForm, ExperienceForm, UserForm, UserFormUpdateExperience, UserFormUpdateEvent,UserFormUpdateFriend,EventFormUpdate
+from .models import Event, Experience, User, Authenticator
+from .forms import EventForm, ExperienceForm, UserForm, UserFormUpdateExperience, UserFormUpdateEvent,UserFormUpdateFriend,EventFormUpdate,UserFormCheckUser
 
 # "/" : entry point to Models API
 def index(request):
@@ -205,16 +208,25 @@ def userAll(request):
 		form = UserForm(request.POST)
 
 		if form.is_valid():
-			e = form.save()
-			response_data = {}
-			response_data['result'] = '200'
-			response_data['message'] = 'OK: Successful'
-			response_data['user'] = json.loads(serializers.serialize("json", [e,]))
-			return JsonResponse(response_data, safe = False)
+			try:
+				theUser = User.objects.get(username=request.POST['username'])
+			except ObjectDoesNotExist:
+				e = form.save()
+				response_data = {}
+				response_data['result'] = '200'
+				response_data['message'] = 'OK: Successful'
+				response_data['user'] = json.loads(serializers.serialize("json", [e,]))
+				return JsonResponse(response_data, safe = False)
+			else:
+				response_data = {}
+				response_data['result'] = '404'
+				response_data['message'] = 'Username already exists'
+				return JsonResponse(response_data, safe = False)
 		else:
 			response_data = {}
 			response_data['result'] = '400'
 			response_data['message'] = 'Bad Request'
+			response_data['errors'] = form.errors
 			return JsonResponse(response_data, safe = False)
 
 def userById(request, user_id):
@@ -427,3 +439,174 @@ def removeUser(request):
 			response_data['result'] = '200'
 			response_data['message'] = 'OK: Successful'
 			return JsonResponse(response_data, safe = False)
+
+def createAuth(request):
+	
+	if request.method == 'GET':
+		# auth = Authenticator.objects.all().delete()
+		auth = Authenticator.objects.filter(**request.GET.dict())
+		data = serializers.serialize("json", auth)
+		return JsonResponse(json.loads(data), safe=False)
+
+	if request.method == 'POST':
+		user_id = request.POST["user_id"]
+		response_data = {}
+
+		try:
+			auth = Authenticator.objects.get(user_id = user_id)
+		except ObjectDoesNotExist:
+			authenticator = hmac.new(
+				key = settings.SECRET_KEY.encode('utf-8'),
+				msg = os.urandom(32),
+				digestmod = 'sha256',
+			).hexdigest()
+
+			theAuth = Authenticator(user_id=user_id, authenticator= authenticator)
+
+			theAuth.save()
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			response_data['auth'] = json.loads(serializers.serialize("json", [theAuth,]))
+			return JsonResponse(response_data, safe = False)
+		else:
+			listAuth = Authenticator.objects.filter(user_id = user_id)
+			for singleAuth in listAuth:
+				singleAuth.delete()
+
+			authenticator = hmac.new(
+					key = settings.SECRET_KEY.encode('utf-8'),
+					msg = os.urandom(32),
+					digestmod = 'sha256',
+				).hexdigest()
+			auth.authenticator = authenticator
+			auth.save()
+
+			response_data = {}
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			response_data['auth'] = json.loads(serializers.serialize("json", [auth,]))
+			return JsonResponse(response_data, safe = False)
+
+	else:
+		response_data = {}
+		response_data['result'] = '400'
+		response_data['message'] = 'Bad Request'
+		return JsonResponse(response_data, safe = False)
+
+def checkAuth(request):
+	# if request.method == 'GET':
+	# 	# auth = Authenticator.objects.all().delete()
+	# 	auth = Authenticator.objects.filter(**request.GET.dict())
+	# 	data = serializers.serialize("json", auth)
+	# 	return JsonResponse(json.loads(data), safe=False)
+
+	if request.method == 'POST':
+		# user_id = request.POST["user_id"]
+		token = request.POST["token"]
+		response_data = {}
+
+		try:
+			auth = Authenticator.objects.get(pk = token)	
+		except ObjectDoesNotExist:
+			response_data = {}
+			response_data['result'] = '404'
+			response_data['message'] = token
+			return JsonResponse(response_data, safe = False)
+
+		else:	
+			date = auth.date_created
+			currentDate = timezone.now()
+			time = (currentDate - date).seconds/3600
+			days = (currentDate - date).days
+			if(time >= 1 or days > 0):
+				auth.delete()
+				response_data['result'] = '404'
+				response_data['message'] = token
+				return JsonResponse(response_data, safe = False)
+			else:
+				response_data['result'] = '200'
+				response_data['message'] = 'OK: Successful'
+				return JsonResponse(response_data, safe = False)
+
+def removeAuth(request):
+	
+	if request.method == 'POST':
+		token = request.POST['token']
+		response_data = {}
+
+		try:
+			auth = Authenticator.objects.get(pk = token)
+		except ObjectDoesNotExist:
+			response_data['result'] = '404'
+			response_data['message'] = token
+			return JsonResponse(response_data, safe = False)
+		else:
+			auth.delete()
+			response_data['result'] = '200'
+			response_data['message'] = 'OK: Successful'
+			return JsonResponse(response_data, safe = False)
+
+
+
+def checkUser(request):
+	if request.method == 'POST':
+
+		response_data = {}
+		form = UserFormCheckUser(request.POST)
+
+		if form.is_valid():
+			username = form.cleaned_data['username']
+			password = form.cleaned_data['password']
+
+			theUser = User.objects.get(username=username)
+
+			if(hashers.check_password(password, theUser.password)):		
+				response_data['result'] = '200'
+				response_data['message'] = 'OK: Successful'
+				response_data['user_id'] = theUser.pk
+				return JsonResponse(response_data, safe = False)
+			else:
+				response_data['result'] = '404'
+				response_data['message'] = 'Invalid User'
+				return JsonResponse(response_data, safe = False)
+		else:
+			response_data['result'] = '400'
+			response_data['message'] = 'Bad Request'
+			return JsonResponse(response_data, safe = False)
+
+def getUserByAuth(request):
+
+	if request.method == 'POST':
+		if 'token' not in request.POST:
+			response_data = {}
+			response_data['result'] = '404'
+			response_data['message'] = "No token given"
+			return JsonResponse(response_data, safe = False) 
+		else:
+			token = request.POST["token"]
+			try:
+				auth = Authenticator.objects.get(pk = token)	
+			except ObjectDoesNotExist:
+				response_data = {}
+				response_data['result'] = '404'
+				response_data['message'] = token
+				return JsonResponse(response_data, safe = False)
+			else:	
+				date = auth.date_created
+				currentDate = timezone.now()
+				time = (currentDate - date).seconds/3600
+				days = (currentDate - date).days
+				if(time >= 1 or days > 0):
+					auth.delete()
+					response_data = {}
+					response_data['result'] = '404'
+					response_data['message'] = token
+					return JsonResponse(response_data, safe = False)
+				else:
+					user_id = auth.user_id
+					current_user=User.objects.get(pk = user_id)
+					response_data={}
+					response_data['result'] = '200'
+					response_data['message'] = 'OK: Successful'
+					response_data['user'] = json.loads(serializers.serialize("json", [current_user]))
+					return JsonResponse(response_data, safe = False)

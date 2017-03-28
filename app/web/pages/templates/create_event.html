@@ -30,43 +30,44 @@
     {% include "navbar.html" %}    
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-12">
-          <div class="jumbotron home_jumbotron">
-            <h1>Welcome to GoX</h1>
-            <p>Start your next experience today.</p>
-            {% if not auth %}
-            <p><a class="btn btn-default btn-lg" href="{% url 'signUp' %}" role="button">Sign Up</a>
-            <a class="btn btn-default btn-lg" href="{% url 'signIn' %}" role="button">Sign In</a></p>
-            {% else %}
-            <p><a class="btn btn-default btn-lg" href="{% url 'userDashboard' %}" role="button">View Dashboard</a></p>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-            <h4>Popular Experiences</h4>
-            <hr/>
-        </div>
-      </div>
-      <div class="row">
-      {% if experience_list %}
-      {% for experience in experience_list %}
-        <div class="col-md-4">
-          {% with 'images/'|add:experience.fields.title|add:'.jpg' as static_image %}
-          <a href="{% url 'experienceDetail' experience.pk %}">
-          <div class="tile" style="background-image: url('{% static static_image %}');">
-            <div class="tile-description">
-              <h3>{{ experience.fields.title }}</h3>
-              <hr class="tile-divider"/>
-              <p>{{ experience.fields.description }} | ${{ experience.fields.totalPrice }}</p>
+        <div class="col-md-offset-3 col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+              <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Create Event</h4>
+              <div class="btn-group pull-right">
+                <a href="{% url 'userDashboard' %}" class="btn btn-default btn-sm">Back</a>
+              </div>
+            </div>
+            <div class="panel-body">
+
+            <form method="post" action="{% url 'createEvent' %}">
+              {% for field in form %}
+              {% if field.name == 'title' or field.name == 'description' %}
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                  {{ field }}
+                </div>
+              </div>
+
+              {% else %}
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>
+                  {{ field }}
+                </div>
+              </div>
+
+              {% endif %}
+              {% endfor %}
+              <div class="col-md-12">
+                <button type="submit" class="btn btn-default">Create</button>
+              </div>
+            </form>
+
             </div>
           </div>
-          </a>
-          {% endwith %}
         </div>
-      {% endfor %}
-      {% endif %}
       </div>
     </div>
 
