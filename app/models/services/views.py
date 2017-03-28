@@ -593,7 +593,7 @@ def getUserByAuth(request):
 				return JsonResponse(response_data, safe = False)
 			else:	
 				user_id = auth.user_id
-				current_user=User.objects.get(pk = user_id)
+				current_user=User.objects.get(username = user_id)
 				response_data={}
 				response_data['result'] = '200'
 				response_data['message'] = 'OK: Successful'
