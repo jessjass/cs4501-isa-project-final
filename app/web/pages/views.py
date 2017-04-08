@@ -299,12 +299,30 @@ def createEvent(request, user):
 def searchEvents(request, user):
     context = {}
     if request.method == 'GET':
+        context['auth'] = user['user'][0]['fields']
+        return render(request, 'search_events.html', context)
 
-        try:
-            resp = requests.get(exp_api + '/api/v1/event/search/?search=Kafka')
-        except requests.exceptions.RequestException as e:
-            return HttpResponse(e)
+    if request.method == 'POST':
+        context['auth'] = user['user'][0]['fields']
+
+        if 'search' in request.POST:
+            search = request.POST['search']
+
+            try:
+                resp = requests.get(exp_api + '/api/v1/event/search/?search=' + search)
+            except requests.exceptions.RequestException as e:
+                return HttpResponse(e)
+            else:
+
+                es_output = resp.json()['data']['hits']['hits']
+
+                # preprocess elastic search output for template
+                hits = []
+                for h in es_output:
+                    hits.append(h['_source'])
+
+                context['hits'] = hits
+                context['search'] = search
+                return render(request, 'search_events.html', context)
         else:
-            return JsonResponse(resp.json(), safe=False)
-            context['auth'] = user['user'][0]['fields']
             return render(request, 'search_events.html', context)

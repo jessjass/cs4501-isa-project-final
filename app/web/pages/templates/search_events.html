@@ -39,12 +39,16 @@
                     <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Search Results</h4>
                 </div>
                 <div class="panel-body">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for...">
-                        <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button">Search</button>
-                        </span>
-                    </div>
+                    <form action="{% url 'searchEvents' %}" method="post">
+                        <div class="input-group">
+                            <input {% if search %} value="{{ search }}" {% endif %}
+                                    type="text" name="search" class="form-control" placeholder="Search for an event">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit">Search</button>
+                            </span>
+                        </div>
+                    </form>
+
                     <table class="table">
                         <thead>
                         <tr>
@@ -56,15 +60,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for e in event_list %}
+                        {% if hits %}
+                        {% for h in hits %}
                             <tr>
-                                <td>{{ e.fields.title }}</td>
-                                <td>{{ e.fields.datetime|slice:":10"}}</td>
-                                <td>{{ e.fields.datetime|slice:"11:19" }}</td>
-                                <td>${{ e.fields.price }}</td>
-                                <td>{{ e.fields.description }}</td>
+                                <td>{{ h.title }}</td>
+                                <td>{{ h.datetime|slice:":10"}}</td>
+                                <td>{{ h.datetime|slice:"11:19" }}</td>
+                                <td>${{ h.price }}</td>
+                                <td>{{ h.description }}</td>
                             </tr>
                         {% endfor %}
+                        {% endif %}
                         </tbody>
                     </table>
                 </div>
