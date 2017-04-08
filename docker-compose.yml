@@ -30,6 +30,7 @@ web:
    volumes:
       - ./app/web:/app
    command: bash -c "pip install requests && python manage.py collectstatic <<<yes && mod_wsgi-express start-server --url-alias /static static --working-directory ./ --reload-on-changes ./web/wsgi.py"
+
 kafka:
    image: spotify/kafka
    container_name: kafka
@@ -43,12 +44,13 @@ es:
    container_name: es
    ports:
       - "9200:9200"
+
 batch:
    image: tp33/django
    container_name: batch
    links:
       - kafka:kafka
       - es:es
-   volumes:
-      - ./app/batch:/app
-   command: bash -c "python batch.py"
+#   volumes:
+#      - ./app/batch:/app
+#   command: bash -c "python batch.py"
