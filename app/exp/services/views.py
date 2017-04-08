@@ -218,16 +218,19 @@ def createEvent(request):
 
 		try:
 			resp = requests.post(models_api + '/api/v1/event/', post_data)
+			es = Elasticsearch(['es'])
 		except requests.exceptions.RequestException as e:
 			return JsonResponse({ "error" : e }, safe=False)
 		else:
+			itemId = resp.json()['event'][0]['pk']
+			es.index(index='listing_index', doc_type='listing', id=itemID, body=post_data)
 			response_data['result'] = "200"
 			response_data['message'] = "OK: Successful"
 			return JsonResponse(response_data, safe=False)
 
 def searchEvent(request):
 	response_data = {}
-	
+
 	if request.method == 'GET':
 		query = request.GET['search']
 		try:
