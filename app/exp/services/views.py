@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+from elasticsearch import Elasticsearch
 
 import urllib.request
 import urllib.parse
@@ -223,3 +224,21 @@ def createEvent(request):
 			response_data['result'] = "200"
 			response_data['message'] = "OK: Successful"
 			return JsonResponse(response_data, safe=False)
+
+def searchEvent(request):
+	response_data = {}
+	
+	if request.method == 'GET':
+		query = request.GET['search']
+		try:
+			es = Elasticsearch(['es'])
+		except:
+			response_data['result'] = "400"
+			response_data['message'] = "Failed to search"
+			return JsonResponse(response_data, safe = False)
+		else:
+			data = es.search(index='listing_index', body={'query': {'query_string': {'query': query}}, 'size': 10})
+			response_data['result'] = "200"
+			response_data['message'] = "OK: Successful"
+			response_data['data'] = data
+			return JsonResponse(response_data, safe = False)
