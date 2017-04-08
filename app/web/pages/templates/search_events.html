@@ -64,8 +64,8 @@
                         {% for h in hits %}
                             <tr>
                                 <td>{{ h.title }}</td>
-                                <td>{{ h.datetime|slice:":10"}}</td>
-                                <td>{{ h.datetime|slice:"11:19" }}</td>
+                                <td>{{ h.date}}</td>
+                                <td>{{ h.time }}</td>
                                 <td>${{ h.price }}</td>
                                 <td>{{ h.description }}</td>
                             </tr>

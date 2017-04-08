@@ -313,6 +313,10 @@ def searchEvents(request, user):
             except requests.exceptions.RequestException as e:
                 return HttpResponse(e)
             else:
+                if resp.json()['result'] != "200":
+                    context['hits'] = []
+                    context['search'] = search
+                    return render(request, 'search_events.html', context)
 
                 es_output = resp.json()['data']['hits']['hits']
 
