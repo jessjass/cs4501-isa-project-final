@@ -301,10 +301,10 @@ def searchEvents(request, user):
     if request.method == 'GET':
 
         try:
-            resp = requests.get(exp_api + '/api/v1/event/search/?search=Event')
+            resp = requests.get(exp_api + '/api/v1/event/search/?search=Kafka')
         except requests.exceptions.RequestException as e:
             return HttpResponse(e)
         else:
-            # return JsonResponse(, safe=False)
+            return JsonResponse(resp.json(), safe=False)
             context['auth'] = user['user'][0]['fields']
             return render(request, 'search_events.html', context)

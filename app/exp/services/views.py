@@ -1,6 +1,8 @@
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from elasticsearch import Elasticsearch
+from kafka import KafkaProducer
+
 
 import urllib.request
 import urllib.parse
@@ -225,14 +227,16 @@ def createEvent(request):
 
         try:
             resp = requests.post(models_api + '/api/v1/event/', post_data)
-            es = Elasticsearch(['es'])
         except requests.exceptions.RequestException as e:
-            return JsonResponse({ "error" : e }, safe=False)
+            return JsonResponse({"error":e}, safe=False)
         else:
             itemId = resp.json()['event'][0]['pk']
-            es.index(index='listing_index', doc_type='listing', id=itemID, body=post_data)
             response_data['result'] = "200"
             response_data['message'] = "OK: Successful"
+
+            producer = KafkaProducer(bootstrap_servers='kafka:9092')
+            new_listing = {'title': title, 'description': description, 'id': itemId}
+            producer.send('new-listings-topic', json.dumps(new_listing).encode('utf-8'))
             return JsonResponse(response_data, safe=False)
 
 

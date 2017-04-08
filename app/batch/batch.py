@@ -9,11 +9,13 @@ while True:
     except:
         problem = "Node not ready error"
     else:
-        for message in consumer:
-            newListing = json.loads((message.value).decode('utf-8'))
-            try:
-                es = Elasticsearch(['es'])
-            except:
-                problem = "ES not ready"
-            else:
-                es.index(index='listing_index', doc_type='listing', id=newListing['id'], body=newListing)          
+
+        try:
+            es = Elasticsearch(['es'])
+        except:
+            problem = "ES not ready"
+        else:
+            for message in consumer:
+                newListing = json.loads(message.value.decode('utf-8'))
+                es.index(index='listing_index', doc_type='listing', id=newListing['id'], body=newListing)
+            es.indices.refresh(index="listing_index")
