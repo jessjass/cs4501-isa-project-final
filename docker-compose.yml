@@ -49,4 +49,6 @@ batch:
    links:
       - kafka:kafka
       - es:es
-  #  command: <run a python script that pulls messages from Kafka and indexs that in ES>
+   volumes:
+      - ./app/batch:/app
+   command: bash -c "python batch.py"
