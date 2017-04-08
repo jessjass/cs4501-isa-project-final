@@ -294,8 +294,17 @@ def createEvent(request, user):
         context['auth'] = user['user'][0]['fields']
         return render(request, 'create_event.html', context)
 
+
 @login_required
 def searchEvents(request, user):
     context = {}
     if request.method == 'GET':
-        return render(request, 'search_events.html', context)
+
+        try:
+            resp = requests.get(exp_api + '/api/v1/event/search/?search=Event')
+        except requests.exceptions.RequestException as e:
+            return HttpResponse(e)
+        else:
+            # return JsonResponse(, safe=False)
+            context['auth'] = user['user'][0]['fields']
+            return render(request, 'search_events.html', context)
