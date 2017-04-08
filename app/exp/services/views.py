@@ -28,7 +28,7 @@ def index(request):
         try:
             resp_json = urllib.request.urlopen(req)
             # userResp_json = urllib.request.urlopen(userReq)
-            userInfo = requests.post(models_api + '/api/v1/user/auth/', post_data)
+            userInfo= requests.post(models_api+'/api/v1/user/auth/',post_data)
 
         except URLError as e:
             # URLError
@@ -37,7 +37,7 @@ def index(request):
                 response_data['message'] = 'We failed to reach a server. Reason: ' + e.reason
             # HTTPError
             elif hasattr(e, 'code'):
-                response_data['result'] = e.code  # error code
+                response_data['result'] = e.code # error code
                 response_data['message'] = 'The server couldn\'t fulfill the request.'
         else:
             resp_json = resp_json.read().decode('utf-8')
@@ -70,7 +70,7 @@ def experienceDetail(request, exp_id):
         try:
             resp_json = urllib.request.urlopen(req)
             # userResp_json = urllib.request.urlopen(userReq)
-            userInfo = requests.post(models_api + '/api/v1/user/auth/', post_data)
+            userInfo= requests.post(models_api+'/api/v1/user/auth/',post_data)
 
         except URLError as e:
             # URLError
@@ -79,10 +79,10 @@ def experienceDetail(request, exp_id):
                 response_data['message'] = 'We failed to reach a server. Reason: ' + e.reason
             # HTTPError
             elif hasattr(e, 'code'):
-                response_data['result'] = e.code  # error code
+                response_data['result'] = e.code # error code
                 response_data['message'] = 'The server couldn\'t fulfill the request.'
         except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": e}, safe=False)
+            return JsonResponse({ "error" : e }, safe=False)
 
         else:
             resp_json = resp_json.read().decode('utf-8')
@@ -118,7 +118,7 @@ def signUp(request):
         try:
             resp = requests.post(models_api + '/api/v1/user/', post_data)
         except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": e}, safe=False)
+            return JsonResponse({ "error" : e }, safe=False)
         else:
             return JsonResponse(resp.json())
 
@@ -133,7 +133,7 @@ def signOut(request):
         try:
             resp = requests.post(models_api + '/api/v1/auth/remove/', post_data)
         except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": e}, safe=False)
+            return JsonResponse({ "error" : e }, safe=False)
         else:
             return JsonResponse(resp.json())
 
@@ -152,7 +152,7 @@ def signIn(request):
         try:
             resp = requests.post(models_api + '/api/v1/user/check/', post_data)
         except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": e}, safe=False)
+            return JsonResponse({ "error" : e }, safe=False)
         else:
             response = resp.json()
             if response['result'] == '200':
@@ -161,7 +161,7 @@ def signIn(request):
                     auth_data['user_id'] = response['user_id']
                     authresp = requests.post(models_api + '/api/v1/auth/create/', auth_data)
                 except requests.exceptions.RequestException as e:
-                    return JsonResponse({"error": e}, safe=False)
+                    return JsonResponse({ "error" : e }, safe=False)
                 else:
                     response['auth'] = authresp.json()['auth'][0]['pk']
                     return JsonResponse(response)
@@ -175,12 +175,12 @@ def checkUserAuth(request):
         auth_data['token'] = request.POST['auth']
         try:
             authresp = requests.post(models_api + '/api/v1/auth/check/', auth_data)
-            userInfo = requests.post(models_api + '/api/v1/user/auth/', auth_data)
+            userInfo= requests.post(models_api+'/api/v1/user/auth/',auth_data)
 
         except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": e}, safe=False)
+            return JsonResponse({ "error" : e }, safe=False)
         else:
-            if (authresp.json()['result'] == '200'):
+            if(authresp.json()['result'] == '200'):
                 response_data = {}
                 response_data['result'] = "200"
                 response_data['message'] = "OK: User authenticated"
@@ -192,7 +192,6 @@ def checkUserAuth(request):
                 response_data['message'] = "Error: Unknown User"
                 return JsonResponse(response_data)
 
-
 def userDashboard(request, user_id):
     response_data = {}
 
@@ -200,7 +199,7 @@ def userDashboard(request, user_id):
         try:
             resp = requests.get(models_api + '/api/v1/event?createdBy=' + user_id)
         except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": e}, safe=False)
+            return JsonResponse({ "error" : e }, safe=False)
         else:
             response_data['event_list'] = resp.json()
             return JsonResponse(response_data['event_list'])
@@ -226,9 +225,12 @@ def createEvent(request):
 
         try:
             resp = requests.post(models_api + '/api/v1/event/', post_data)
+            es = Elasticsearch(['es'])
         except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": e}, safe=False)
+            return JsonResponse({ "error" : e }, safe=False)
         else:
+            itemId = resp.json()['event'][0]['pk']
+            es.index(index='listing_index', doc_type='listing', id=itemID, body=post_data)
             response_data['result'] = "200"
             response_data['message'] = "OK: Successful"
             return JsonResponse(response_data, safe=False)
@@ -244,10 +246,10 @@ def searchEvent(request):
         except:
             response_data['result'] = "400"
             response_data['message'] = "Failed to search"
-            return JsonResponse(response_data, safe=False)
+            return JsonResponse(response_data, safe = False)
         else:
             data = es.search(index='listing_index', body={'query': {'query_string': {'query': query}}, 'size': 10})
             response_data['result'] = "200"
             response_data['message'] = "OK: Successful"
             response_data['data'] = data
-            return JsonResponse(response_data, safe=False)
+            return JsonResponse(response_data, safe = False)
