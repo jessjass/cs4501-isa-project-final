@@ -41,12 +41,14 @@
                 <div class="panel-body">
                     <form action="{% url 'searchEvents' %}" method="post">
                         <div class="input-group">
-                            <input {% if search %} value="{{ search }}" {% endif %}
-                                    type="text" name="search" class="form-control" placeholder="Search for an event">
+                            {% for field in form %}
+                                {{ field }}
+                            {% endfor %}
                             <span class="input-group-btn">
                                 <button class="btn btn-primary" type="submit">Search</button>
                             </span>
                         </div>
+
                     </form>
 
                     <table class="table">

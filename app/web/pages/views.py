@@ -9,7 +9,7 @@ from urllib.error import URLError
 import json
 import requests
 
-from .forms import CreateEventForm, SignInForm, SignUpForm
+from .forms import CreateEventForm, SignInForm, SignUpForm, SearchForm
 
 exp_api = 'http://exp:8000'
 
@@ -300,33 +300,35 @@ def searchEvents(request, user):
     context = {}
     if request.method == 'GET':
         context['auth'] = user['user'][0]['fields']
+        form = SearchForm()
+        context['form'] = form
         return render(request, 'search_events.html', context)
 
     if request.method == 'POST':
         context['auth'] = user['user'][0]['fields']
+        form = SearchForm(request.POST)
+        context['form'] = form
 
-        if 'search' in request.POST:
-            search = request.POST['search']
+        if form.is_valid():
+            query = form.cleaned_data['query']
 
             try:
-                resp = requests.get(exp_api + '/api/v1/event/search/?search=' + search)
+                resp = requests.get(exp_api + '/api/v1/event/search/?search=' + query)
             except requests.exceptions.RequestException as e:
                 return HttpResponse(e)
             else:
                 if resp.json()['result'] != "200":
                     context['hits'] = []
-                    context['search'] = search
                     return render(request, 'search_events.html', context)
 
                 es_output = resp.json()['data']['hits']['hits']
 
-                # preprocess elastic search output for template
+                # pre-process elastic search output for template
                 hits = []
                 for h in es_output:
                     hits.append(h['_source'])
 
                 context['hits'] = hits
-                context['search'] = search
                 return render(request, 'search_events.html', context)
         else:
             return render(request, 'search_events.html', context)
