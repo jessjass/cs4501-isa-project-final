@@ -39,10 +39,9 @@
               </div>
             </div>
             <div class="panel-body">
-
-            <form method="post" action="{% url 'createEvent' %}">
+            <form enctype="multipart/form-data" method="post" action="{% url 'createEvent' %}">
               {% for field in form %}
-              {% if field.name == 'title' or field.name == 'description' %}
+              {% if field.name == 'title' or field.name == 'description' or field.name == 'image' %}
               <div class="col-md-12">
                 <div class="form-group">
                   <label for="{{ field.auto_id }}">{{ field.label_tag }}</label>

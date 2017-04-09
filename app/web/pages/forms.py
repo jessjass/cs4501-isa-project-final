@@ -123,3 +123,13 @@ class CreateEventForm(forms.Form):
                 'placeholder': 'Describe your event.',
                 'rows': '3'
             }))
+
+    image = forms.FileField(
+        label="Event Image",
+        widget=forms.ClearableFileInput(
+            attrs={
+                'class': 'form-control',
+                'accept': '.jpg, .jpeg, .png'
+            }
+        )
+    )

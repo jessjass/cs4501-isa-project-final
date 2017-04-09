@@ -8,10 +8,22 @@ import urllib.parse
 from urllib.error import URLError
 import json
 import requests
+import base64
 
 from .forms import CreateEventForm, SignInForm, SignUpForm, SearchForm
 
 exp_api = 'http://exp:8000'
+
+
+def get_event_image_source(event_id):
+
+    try:
+        image_resp = requests.get(exp_api + '/api/v1/event/image/' + event_id + '/')
+    except requests.exceptions.RequestException as e:
+        return None
+    else:
+        encoded_image = base64.b64encode(image_resp.content).decode('utf-8')
+        return 'data:image/png;base64, ' + encoded_image
 
 
 def login_required(f):
@@ -250,7 +262,13 @@ def userDashboard(request, user):
         except requests.exceptions.RequestException as e:
             return HttpResponse(e)
         else:
-            context['event_list'] = resp.json()['event_list']
+
+            events = resp.json()['event_list']
+            events_list = []
+            for e in events:
+                image_source = get_event_image_source(str(e['pk']))
+                events_list.append([e, image_source])
+            context['event_list'] = events_list
             return render(request, 'user_dashboard.html', context)
 
 
@@ -258,7 +276,7 @@ def userDashboard(request, user):
 def createEvent(request, user):
     context = {}
     if request.method == 'POST':
-        form = CreateEventForm(request.POST)
+        form = CreateEventForm(request.POST, request.FILES)
 
         if not form.is_valid():
             context['form'] = form
@@ -273,8 +291,12 @@ def createEvent(request, user):
             'createdBy': user['user'][0]['pk']
         }
 
+        file_data = {
+            'image': form.cleaned_data['image']
+        }
+
         try:
-            resp = requests.post(exp_api + '/api/v1/event/create/', post_data)
+            resp = requests.post(exp_api + '/api/v1/event/create/', data=post_data, files=file_data)
         except requests.exceptions.RequestException as e:
             return HttpResponse(e)
         else:
@@ -290,8 +312,11 @@ def createEvent(request, user):
         context['date'] = 'col-md-4'
         context['time'] = 'col-md-4'
         context['price'] = 'col-md-4'
+        context['image'] = 'com-md-12'
 
         context['auth'] = user['user'][0]['fields']
+        context['image_src'] = get_event_image_source("41")
+
         return render(request, 'create_event.html', context)
 
 

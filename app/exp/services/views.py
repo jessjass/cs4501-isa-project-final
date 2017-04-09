@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 from django.core import serializers
 from elasticsearch import Elasticsearch
 from kafka import KafkaProducer
@@ -194,6 +194,16 @@ def checkUserAuth(request):
                 return JsonResponse(response_data)
 
 
+def getEventImage(request, event_id):
+    if request.method == 'GET':
+        try:
+            resp = requests.get(models_api + '/api/v1/event/image/' + event_id + '/')
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({"error": e}, safe=False)
+        else:
+            return FileResponse(resp)
+
+
 def userDashboard(request, user_id):
     response_data = {}
 
@@ -210,6 +220,7 @@ def userDashboard(request, user_id):
 def createEvent(request):
     response_data = {}
     post_data = {}
+    file_data = {}
 
     if request.method == 'POST':
         title = request.POST['title']
@@ -218,19 +229,22 @@ def createEvent(request):
         price = request.POST['price']
         description = request.POST['description']
         createdBy = request.POST['createdBy']
+        image = request.FILES['image']
 
         post_data['title'] = title
         post_data['datetime'] = date + ' ' + time
         post_data['price'] = price
         post_data['description'] = description
         post_data['createdBy'] = createdBy
+        file_data['image'] = image
 
         try:
-            resp = requests.post(models_api + '/api/v1/event/', post_data)
+            resp = requests.post(models_api + '/api/v1/event/', data=post_data, files=file_data)
         except requests.exceptions.RequestException as e:
             return JsonResponse({"error": e}, safe=False)
         else:
             itemId = resp.json()['event'][0]['pk']
+
             response_data['result'] = "200"
             response_data['message'] = "OK: Successful"
 
@@ -264,3 +278,5 @@ def searchEvent(request):
             response_data['message'] = "OK: Successful"
             response_data['data'] = data
             return JsonResponse(response_data, safe=False)
+
+
