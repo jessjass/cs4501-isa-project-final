@@ -20,7 +20,7 @@ class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=400)
     experience = models.ForeignKey('Experience', on_delete=models.CASCADE, null=True)
-    image = models.FileField()
+    image = models.FileField(default='0')
     createdBy = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
 
     def __str__(self):  # __unicode__ on Python 2
