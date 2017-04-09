@@ -53,6 +53,12 @@ body {
 	border-color: rgba(255, 255, 255, 0.5);
 }
 
+.navbar-search {
+	background-color: #fff;
+    height: 35px;
+    padding: 0px 10px !important;
+}
+
 .navbar-default {
 	background-color: #ff5c33;
 	border-color: #ce330c;
