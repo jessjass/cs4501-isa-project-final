@@ -28,58 +28,38 @@
     <script src="https://use.fontawesome.com/c69eba006b.js"></script>
 </head>
 <body>
-
 {% include "navbar.html" %}
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading clearfix">
-                    <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Search Results</h4>
-                </div>
-                <div class="panel-body">
-                    <form action="{% url 'searchEvents' %}" method="post">
-                        <div class="input-group">
-                            {% for field in form %}
-                                {{ field }}
-                            {% endfor %}
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" type="submit">Search</button>
-                            </span>
-                        </div>
-
-                    </form>
-
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Price</th>
-                            <th>Description</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% if hits %}
-                        {% for h in hits %}
-                            <tr>
-                                <td>{{ h.title }}</td>
-                                <td>{{ h.date}}</td>
-                                <td>{{ h.time }}</td>
-                                <td>${{ h.price }}</td>
-                                <td>{{ h.description }}</td>
-                            </tr>
-                        {% endfor %}
-                        {% endif %}
-                        </tbody>
-                    </table>
-                </div>
+            <h3 class="pull-left">My Events</h3>
+            <div class="pull-right">
+                <ol class="breadcrumb custom-crumbs">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'userDashboard' %}">Dashboard</a></li>
+                    <li class="active">Manage Events</li>
+                </ol>
             </div>
-
         </div>
     </div>
+    <hr class="custom-hr"/>
+    <div class="row">
+        {% for e, src in event_list %}
+            <div class="col-md-4">
+                <a href="#">
+                    <div class="tile" style="background-image: url('{{ src }}');">
+                        <div class="tile-description">
+                            <h3>{{ e.fields.title }}</h3>
+                            <hr class="tile-divider"/>
+                            <p>{{ e.fields.datetime|slice:":10" }} | {{ e.fields.datetime|slice:"11:19" }}
+                                | {{ e.fields.description }} | ${{ e.fields.price }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
 </div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

@@ -15,12 +15,12 @@ from .forms import CreateEventForm, SignInForm, SignUpForm, SearchForm
 exp_api = 'http://exp:8000'
 
 
+# helper function to get the image source for an event object
 def get_event_image_source(event_id):
-
     try:
         image_resp = requests.get(exp_api + '/api/v1/event/image/' + event_id + '/')
     except requests.exceptions.RequestException as e:
-        return None
+        return None  # FIXME add a default image?
     else:
         encoded_image = base64.b64encode(image_resp.content).decode('utf-8')
         return 'data:image/png;base64, ' + encoded_image
@@ -319,6 +319,25 @@ def createEvent(request, user):
 
         return render(request, 'create_event.html', context)
 
+@login_required
+def manageEvents(request, user):
+    context = {}
+    if request.method == 'GET':
+        context['auth'] = user['user'][0]['fields']
+        user_id = user['user'][0]['pk']
+        try:
+            resp = requests.get(exp_api + '/api/v1/user/dashboard/' + str(user_id) + '/')
+        except requests.exceptions.RequestException as e:
+            return HttpResponse(e)
+        else:
+
+            events = resp.json()['event_list']
+            events_list = []
+            for e in events:
+                image_source = get_event_image_source(str(e['pk']))
+                events_list.append([e, image_source])
+            context['event_list'] = events_list
+            return render(request, 'manage_events.html', context)
 
 @login_required
 def searchEvents(request, user):
@@ -351,7 +370,8 @@ def searchEvents(request, user):
                 # pre-process elastic search output for template
                 hits = []
                 for h in es_output:
-                    hits.append(h['_source'])
+                    img_src = get_event_image_source(str(h['_source']['id']))
+                    hits.append([h['_source'], img_src])
 
                 context['hits'] = hits
                 return render(request, 'search_events.html', context)
