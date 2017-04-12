@@ -1,3 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, Client
+from django.core.urlresolvers import reverse
+from models.services.models import Event
 
-# Create your tests here.
+import json
+
+class TestEvent(TestCase):
+

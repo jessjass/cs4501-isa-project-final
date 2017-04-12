@@ -240,6 +240,7 @@ def createEvent(request):
 
         try:
             resp = requests.post(models_api + '/api/v1/event/', data=post_data, files=file_data)
+            resp2 = requests.get(models_api + '/api/v1/event?createdBy=' + str(createdBy))
         except requests.exceptions.RequestException as e:
             return JsonResponse({"error": e}, safe=False)
         else:
@@ -247,6 +248,7 @@ def createEvent(request):
 
             response_data['result'] = "200"
             response_data['message'] = "OK: Successful"
+            response_data['event_list'] = resp2.json()
 
             producer = KafkaProducer(bootstrap_servers='kafka:9092')
             new_listing = {
@@ -278,5 +280,3 @@ def searchEvent(request):
             response_data['message'] = "OK: Successful"
             response_data['data'] = data
             return JsonResponse(response_data, safe=False)
-
-
