@@ -63,10 +63,10 @@
     <br />
 
     <div class="row">
-        {% for h, src in hits %}
+        {% for h, image in hits %}
             <div class="col-md-4">
                 <a href="#">
-                    <div class="tile" style="background-image: url('{{ src }}');">
+                    <div class="tile" style="background-image: url('{{ image.image_source }}');">
                         <div class="tile-description">
                             <h3>{{ h.title }}</h3>
                             <hr class="tile-divider"/>

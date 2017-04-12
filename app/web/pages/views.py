@@ -14,18 +14,6 @@ from .forms import CreateEventForm, SignInForm, SignUpForm, SearchForm
 
 exp_api = 'http://exp:8000'
 
-
-# helper function to get the image source for an event object
-def get_event_image_source(event_id):
-    try:
-        image_resp = requests.get(exp_api + '/api/v1/event/image/' + event_id + '/')
-    except requests.exceptions.RequestException as e:
-        return None  # FIXME add a default image?
-    else:
-        encoded_image = base64.b64encode(image_resp.content).decode('utf-8')
-        return 'data:image/png;base64, ' + encoded_image
-
-
 def login_required(f):
     def wrap(request, *args, **kwargs):
         # try authenticating the user
@@ -263,12 +251,8 @@ def userDashboard(request, user):
             return HttpResponse(e)
         else:
 
-            events = resp.json()['event_list']
-            events_list = []
-            for e in events:
-                image_source = get_event_image_source(str(e['pk']))
-                events_list.append([e, image_source])
-            context['event_list'] = events_list
+            events = resp.json()['events_list']
+            context['events_list'] = events
             return render(request, 'user_dashboard.html', context)
 
 
@@ -315,8 +299,6 @@ def createEvent(request, user):
         context['image'] = 'com-md-12'
 
         context['auth'] = user['user'][0]['fields']
-        context['image_src'] = get_event_image_source("41")
-
         return render(request, 'create_event.html', context)
 
 @login_required
@@ -331,12 +313,8 @@ def manageEvents(request, user):
             return HttpResponse(e)
         else:
 
-            events = resp.json()['event_list']
-            events_list = []
-            for e in events:
-                image_source = get_event_image_source(str(e['pk']))
-                events_list.append([e, image_source])
-            context['event_list'] = events_list
+            events = resp.json()['events_list']
+            context['events_list'] = events
             return render(request, 'manage_events.html', context)
 
 @login_required
@@ -365,14 +343,7 @@ def searchEvents(request, user):
                     context['hits'] = []
                     return render(request, 'search_events.html', context)
 
-                es_output = resp.json()['data']['hits']['hits']
-
-                # pre-process elastic search output for template
-                hits = []
-                for h in es_output:
-                    img_src = get_event_image_source(str(h['_source']['id']))
-                    hits.append([h['_source'], img_src])
-
+                hits = resp.json()['hits']
                 context['hits'] = hits
                 return render(request, 'search_events.html', context)
         else:

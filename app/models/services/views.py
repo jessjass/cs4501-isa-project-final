@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import hashers
 from django.utils import timezone
 from django.conf import settings
+import base64
 
 
 import json, os, hmac, datetime
@@ -62,8 +63,13 @@ def eventImageById(request, event_id):
     else:
 
         if request.method == 'GET':
-            response = FileResponse(open("{0}/{1}".format(settings.MEDIA_ROOT, event.image)))
-            return response
+            with open("{0}/{1}".format(settings.MEDIA_ROOT, event.image), "rb") as f:
+                encoded_response = base64.b64encode(f.read()).decode('utf-8')
+                response_data['result'] = '200'
+                response_data['message'] = 'OK: Successful'
+                response_data['event_id'] = event_id
+                response_data['image_source'] = 'data:image/png;base64, ' + encoded_response
+                return JsonResponse(response_data)
 
 
 # "/event/<event_id>/" : event by id via GET or event update via POST

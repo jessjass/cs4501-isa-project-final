@@ -12,6 +12,22 @@ import requests
 models_api = 'http://models:8000'
 
 
+def get_event_image(event_id):
+    try:
+        resp = requests.get(models_api + '/api/v1/event/image/' + event_id + '/')
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({"error": e}, safe=False)
+    else:
+        image_response = {}
+        if resp.json()['result'] == '200':
+            image_response['image_source'] = resp.json()['image_source']
+            image_response['event_id'] = resp.json()['event_id']
+            return image_response
+        else:
+            image_response['error'] = "Unable to get image source."
+            return image_response
+
+
 # "/" : resources for home page (index.html)
 def index(request):
     response_data = {}
@@ -194,16 +210,6 @@ def checkUserAuth(request):
                 return JsonResponse(response_data)
 
 
-def getEventImage(request, event_id):
-    if request.method == 'GET':
-        try:
-            resp = requests.get(models_api + '/api/v1/event/image/' + event_id + '/')
-        except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": e}, safe=False)
-        else:
-            return FileResponse(resp)
-
-
 def userDashboard(request, user_id):
     response_data = {}
 
@@ -213,8 +219,14 @@ def userDashboard(request, user_id):
         except requests.exceptions.RequestException as e:
             return JsonResponse({"error": e}, safe=False)
         else:
-            response_data['event_list'] = resp.json()
-            return JsonResponse(response_data['event_list'])
+            events = resp.json()['event_list']
+            events_list = []
+            for e in events:
+                image_source = get_event_image(str(e['pk']))
+                events_list.append([e, image_source])
+
+            response_data['events_list'] = events_list
+            return JsonResponse(response_data, safe=False)
 
 
 def createEvent(request):
@@ -236,6 +248,7 @@ def createEvent(request):
         post_data['price'] = price
         post_data['description'] = description
         post_data['createdBy'] = createdBy
+
         file_data['image'] = image
 
         try:
@@ -276,7 +289,12 @@ def searchEvent(request):
         else:
             response_data['result'] = "200"
             response_data['message'] = "OK: Successful"
-            response_data['data'] = data
+            es_output = data['hits']['hits']
+
+            hit_list = []
+            for hit in es_output:
+                image_source = get_event_image(str(hit['_id']))
+                hit_list.append([hit['_source'], image_source])
+
+            response_data['hits'] = hit_list
             return JsonResponse(response_data, safe=False)
-
-
