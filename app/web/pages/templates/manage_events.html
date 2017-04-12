@@ -30,6 +30,9 @@
 <body>
 {% include "navbar.html" %}
 <div class="container-fluid">
+    {% if success == "TRUE" %}
+    <div class="alert alert-success" role="alert"> Event sucessfully created!</div>
+    {% endif %}
     <div class="row">
         <div class="col-md-12">
             <h3 class="pull-left">My Events</h3>

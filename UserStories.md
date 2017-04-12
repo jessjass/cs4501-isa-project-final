@@ -33,6 +33,15 @@ COMPLETED: As a user, I want to sign up.
 
 ## CURRENT BACKLOG: Project 5 Sprint
 
+COMPLETED: As a user, I want to search through events I have created.
+
+COMPLETED: As a user, I want to view events I created.
+  * Reasoning: User create events and would like to view the events they create
+  * Acceptance Criteria (Tests):
+    * Web Layer: Should be able to display events created by the signed in user in a tile format
+    * Exp Layer: Return events created by the user to the web layer in a json response
+    * Model Layer: Query the db and return events to the exp layer in a json response.
+
 As a user, I want to see all events on the events page.
   * Reasoning: Events are a core part of any transaction and a user should be able to see all options.
   * Acceptance Criteria (Tests):
@@ -75,7 +84,7 @@ As a user, I want to see my user profile.
     * Exp Layer: Should make a request to the User entity to get more details.
     * Model Layer: Should successfully query the db for a user profile by primary key.
 
-As a user, I want to search through events.
+
 
 As a user, I want to search through experiences.
 

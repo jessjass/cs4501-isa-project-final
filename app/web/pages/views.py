@@ -285,8 +285,16 @@ def createEvent(request, user):
             return HttpResponse(e)
         else:
             context['auth'] = user['user'][0]['fields']
-            return redirect('userDashboard')
-        # return render(request, 'create_event_success.html', context)
+            context['success'] = "TRUE"
+            # events = resp.json()['event_list']
+            # events_list = []
+            # for e in events:
+            #     image_source = get_event_image_source(str(e['pk']))
+            #     events_list.append([e, image_source])
+            # context['event_list'] = events_list            
+            # context['success'] = "TRUE"
+            return render(request, 'user_dashboard.html', context)
+            #return render(request, 'manage_events.html', context)
 
     if request.method == 'GET':
         form = CreateEventForm()
