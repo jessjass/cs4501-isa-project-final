@@ -38,7 +38,8 @@
         "title": "Lunch at Citizen Burger",
         "description": "Grab a bite before the movie.",
         "experience": 1,
-        "createdBy":1
+        "createdBy":1,
+        "image": "CitizenBurger.jpg"
     }
 },
 {
@@ -50,7 +51,8 @@
         "title": "Movie Downtown",
         "description": "La La Land",
         "experience": 1,
-        "createdBy":1
+        "createdBy":1,
+        "image": "MovieDowntown.jpg"
     }
 },
 {
@@ -62,7 +64,8 @@
         "title": "Wintergreen Ski Resort",
         "description": "Great views, great times.",
         "experience": 2,
-        "createdBy":2
+        "createdBy":2,
+        "image": "WintergreenResort.jpg"
     }
 },
 {
@@ -74,7 +77,8 @@
         "title": "Breweries",
         "description": "DB or Blue Mountain or Bold Rock.",
         "experience": 2,
-        "createdBy":2
+        "createdBy":2,
+        "image": "Breweries.jpg"
     }
 },
 {
@@ -86,7 +90,8 @@
         "title": "Drive to SnowShoe",
         "description": "3 hour drive to the cabin",
         "experience": 3,
-        "createdBy":3
+        "createdBy":3,
+        "image": "Snowshoe.jpg"
     }
 },
 {
@@ -98,7 +103,8 @@
         "title": "Skiing all day",
         "description": "Or you can just chill at the cabin",
         "experience": 3,
-        "createdBy":3
+        "createdBy":3,
+        "image": "SkiAllDay.jpg"
     }
 },
 {
