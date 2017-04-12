@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,7 +13,8 @@
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
 
     <!-- Bootstrap: Paper Theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/paper/bootstrap.min.css"
+          crossorigin="anonymous">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
@@ -25,20 +26,50 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="https://use.fontawesome.com/c69eba006b.js"></script>
-  </head>
-  <body>
-    {% include "navbar.html" %}    
-    <div class="container-fluid">
-      <div class="row">
+</head>
+<body>
+{% include "navbar.html" %}
+<div class="container-fluid">
+    <div class="row">
         <div class="col-md-12">
-          <h4>Your event has been created successfully!</h4>
+            <h3 class="pull-left">My Events</h3>
+            
+            <div class="pull-right">
+                <ol class="breadcrumb custom-crumbs">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'userDashboard' %}">Dashboard</a></li>
+                    <li class="active">Manage Events</li>
+                </ol>
+            </div>
         </div>
-      </div>
+
+    </div>
+    <div class="alert alert-success" role="alert"> Event sucessfully created!</div>
+    <hr class="custom-hr"/>
+    <div class="row">
+        {% for e, src in event_list %}
+            <div class="col-md-4">
+                <a href="#">
+                    <div class="tile" style="background-image: url('{{ src }}');">
+                        <div class="tile-description">
+                            <h3>{{ e.fields.title }}</h3>
+                            <hr class="tile-divider"/>
+                            <p>{{ e.fields.datetime|slice:":10" }} | {{ e.fields.datetime|slice:"11:19" }}
+                                | {{ e.fields.description }} | ${{ e.fields.price }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  </body>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+</body>
 </html>
