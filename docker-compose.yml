@@ -72,3 +72,12 @@ batch:
    volumes:
       - ./app/batch:/app
    command: bash -c "python batch.py"
+
+jmeter:
+  image: hauptmedia/jmeter
+  container_name: jmeter
+  volumes:
+    - ./app/jmeter:/opt/jmeter/tests
+  links:
+    - web
+  command: bash -c "bin/jmeter -n -t tests/docker-local-perf-test.jmx -l tests/docker-local-perf-results.log"

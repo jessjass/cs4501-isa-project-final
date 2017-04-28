@@ -10,5 +10,6 @@ docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'CRE
 docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'CREATE USER \"www\"@\"%\" IDENTIFIED BY \"\$3cureUS\";' "
 docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'GRANT ALL ON cs4501.* TO \"www\"@\"%\";' "
 docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'GRANT ALL ON test_cs4501.* TO \"www\"@\"%\";' "
-docker-compose up
+docker-compose up -d models exp web kafka es batch
 sleep 10
+docker-compose up jmeter
