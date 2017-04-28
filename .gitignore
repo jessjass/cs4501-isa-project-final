@@ -13,3 +13,4 @@ app/models/media/*
 app/models/static/admin
 .idea/*
 .idea/
+app/jmeter/jmeter.log
