@@ -19,8 +19,8 @@ models:
     container_name: models
     links:
       -  mysql:db
-    ports:
-      - "8001:8000"
+    # ports:
+    #   - "8001:8000"
     volumes:
       -  ./app/models:/app
     command: bash -c "pip install requests && python manage.py makemigrations services && python manage.py migrate && python manage.py loaddata database.json && mod_wsgi-express start-server --url-alias /static static --working-directory ./ --reload-on-changes ./models/wsgi.py"
@@ -32,8 +32,8 @@ exp:
       - models
       - kafka:kafka
       - es:es
-   ports:
-      - "8002:8000"
+  #  ports:
+  #     - "8002:8000"
    volumes:
       - ./app/exp:/app
    command: bash -c "pip install requests && mod_wsgi-express start-server --working-directory ./ --reload-on-changes ./exp/wsgi.py"
@@ -43,8 +43,19 @@ web:
    container_name: web
    links:
       - exp
-   ports:
-      - "8000:8000"
+  #  ports:
+  #     - "8000:8000"
+   volumes:
+      - ./app/web:/app
+   command: bash -c "pip install requests && python manage.py collectstatic <<<yes && mod_wsgi-express start-server --url-alias /static static --working-directory ./ --reload-on-changes ./web/wsgi.py"
+
+web2:
+   image: tp33/django
+   container_name: web2
+   links:
+      - exp
+  #  ports:
+  #     - "8000:8000"
    volumes:
       - ./app/web:/app
    command: bash -c "pip install requests && python manage.py collectstatic <<<yes && mod_wsgi-express start-server --url-alias /static static --working-directory ./ --reload-on-changes ./web/wsgi.py"
@@ -81,3 +92,14 @@ jmeter:
   links:
     - web
   command: bash -c "bin/jmeter -n -t tests/docker-local-perf-test.jmx -l tests/docker-local-perf-results.log"
+
+lb:
+   image: haproxy
+   container_name: lb
+   links:
+      - web
+      - web2
+   volumes:
+      - ./app/batch/:/usr/local/etc/haproxy/
+   ports:
+      - "8000:80"
