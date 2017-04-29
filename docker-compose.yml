@@ -87,10 +87,10 @@ batch:
 jmeter:
   image: hauptmedia/jmeter
   container_name: jmeter
-  volumes:
-    - ./app/jmeter:/opt/jmeter/tests
   links:
     - web
+  volumes:
+    - ./app/jmeter:/opt/jmeter/tests
   command: bash -c "bin/jmeter -n -t tests/docker-local-perf-test.jmx -l tests/docker-local-perf-results.log"
 
 lb:
@@ -103,3 +103,21 @@ lb:
       - ./app/batch/:/usr/local/etc/haproxy/
    ports:
       - "8000:80"
+
+selenium-chrome:
+  image: selenium/standalone-chrome
+  container_name: selenium-chrome
+  links:
+    - lb:lb
+  ports:
+    - "4444:4444"
+
+selenium:
+  image: tp33/django
+  container_name: selenium
+  links:
+    - lb:lb
+    - selenium-chrome:selenium-chrome
+  volumes:
+    - ./app/selenium:/app
+  command: bash -c "pip install selenium==2.48 && python sel_test.py"

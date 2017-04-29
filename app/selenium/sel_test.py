@@ -2,16 +2,21 @@ import unittest
 import os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
 class FrontEndTests(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Remote(
+            command_executor='http://selenium-chrome:4444/wd/hub/',
+            desired_capabilities=DesiredCapabilities.CHROME
+        )
+
         # create a new Chrome session
         self.driver.implicitly_wait(30)
         self.driver.maximize_window()
         # navigate to the application home page
-        self.driver.get("http://192.168.99.100:8000/")
+        self.driver.get("http://lb")
 
     def test010_signIn(self):
         signInButton = self.driver.find_element_by_xpath("//*[@id=\"bs-example-navbar-collapse-1\"]/ul[2]/li/a")
@@ -32,17 +37,17 @@ class FrontEndTests(unittest.TestCase):
 
         self.driver.save_screenshot('signin.png')
 
-    def test020_searchEvent(self):
-        self.test010_signIn()
-        # # get the search textbox
-        search_field = self.driver.find_element_by_name("query")
-
-        # enter search keyword and submit
-        search_field.send_keys("adventure")
-        search_field.submit()
-        assert "Search Events" not in self.driver.page_source
-
-        self.driver.save_screenshot('sign.png')
+    # def test020_searchEvent(self):
+    #     self.test010_signIn()
+    #     # # get the search textbox
+    #     search_field = self.driver.find_element_by_name("query")
+    #
+    #     # enter search keyword and submit
+    #     search_field.send_keys("adventure")
+    #     search_field.submit()
+    #     assert "Search Events" not in self.driver.page_source
+    #
+    #     self.driver.save_screenshot('sign.png')
 
     def test030_expDetailsPage(self):
         self.test010_signIn()

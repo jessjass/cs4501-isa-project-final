@@ -16,3 +16,4 @@ app/models/static/admin
 app/jmeter/jmeter.log
 app/jmeter/local-perf-results.log
 app/jmeter/docker-local-perf-results.log
+app/selenium/*.png
