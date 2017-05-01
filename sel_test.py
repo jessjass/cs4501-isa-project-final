@@ -30,7 +30,6 @@ class FrontEndTests(unittest.TestCase):
 
 		assert "Welcome, Bob!" in self.driver.page_source
 		
-		self.driver.save_screenshot('signin.png')	
 
 	def test020_searchEvent(self):
 		self.test010_signIn()
@@ -40,17 +39,13 @@ class FrontEndTests(unittest.TestCase):
 		# enter search keyword and submit
 		search_field.send_keys("adventure")
 		search_field.submit()
-		assert "Search Events" not in self.driver.page_source
-
-		self.driver.save_screenshot('sign.png')
+		assert "Search Events" in self.driver.page_source
 
 	def test030_expDetailsPage(self):
 		self.test010_signIn()
 
 		exp = self.driver.find_element_by_xpath("/html/body/div/div[3]/div[1]/a")
-		exp.click()
-
-		self.driver.save_screenshot('signin.png')	
+		exp.click()	
 
 		assert "Experience Details" in self.driver.page_source
 
@@ -109,13 +104,32 @@ class FrontEndTests(unittest.TestCase):
 		eventTitle.send_keys("Test event")
 
 		eventDate = self.driver.find_element_by_xpath("//*[@id=\"id_date\"]")
-		eventDate.send_keys("2017-05-02")
+		eventDate.send_keys("02012005")
 
 		eventTime = self.driver.find_element_by_xpath("//*[@id=\"id_time\"]")
-		eventTime.send_keys("14:00:00")
+		eventTime.send_keys(Keys.ARROW_UP)
+		eventTime.send_keys(Keys.ARROW_RIGHT)
+		eventTime.send_keys(Keys.ARROW_UP)
+		eventTime.send_keys(Keys.ARROW_RIGHT)
+		eventTime.send_keys(Keys.ARROW_UP)
+		eventTime.send_keys(Keys.ARROW_RIGHT)
 
-		
+		eventPrice = self.driver.find_element_by_xpath("//*[@id=\"id_price\"]")
+		eventPrice.send_keys("100.00")
 
+		eventDescription = self.driver.find_element_by_xpath("//*[@id=\"id_description\"]")
+		eventDescription.send_keys("Event to test create event functionality")
+
+		# send_keys needs the full file path to the picture
+		# there are two slashes to escape the backslash used in windows file paths
+		eventPic = self.driver.find_element_by_xpath("//*[@id=\"id_image\"]")
+		eventPic.send_keys(os.path.dirname(os.path.realpath(__file__)) + "\\butterfly-wallpaper-5875-6202-hd-wallpapers.jpg") # gets current directory and adds the picture name to end
+		# eventPic.send_keys("C:\\Users\\Jessi\\Desktop\\test_webdriver\\butterfly-wallpaper-5875-6202-hd-wallpapers.jpg")
+
+		createButton = self.driver.find_element_by_xpath("/html/body/div/div/div/div/div[2]/form/div[7]/button")
+		createButton.click()
+
+		assert "User Dashboard" in self.driver.page_source
 
 	def tearDown(self):
 		self.driver.quit()

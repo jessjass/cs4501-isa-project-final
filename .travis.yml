@@ -7,7 +7,6 @@ services:
   - docker
 
 before_script:
-  # PREPARE DATABASE
   - mkdir db
   - docker-compose create mysql
   - docker-compose start mysql
@@ -19,18 +18,15 @@ before_script:
   - docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'CREATE USER \"www\"@\"%\" IDENTIFIED BY \"\$3cureUS\";' "
   - docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'GRANT ALL ON cs4501.* TO \"www\"@\"%\";' "
   - docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'GRANT ALL ON test_cs4501.* TO \"www\"@\"%\";' "
+  - docker-compose up -d models exp web kafka es batch lb selenium-chrome
   - sleep 10
-
-  # COMPOSE REMAINING CONTAINERS
-  - docker-compose up -d
+  - docker-compose up -d jmeter
 
 script:
-  # RUN DJANGO UNIT TESTS
   - docker exec -it models bash -c "python manage.py test --no-input"
+  - docker-compose up selenium
 
 after_script:
-  # DECOMPOSE CONTAINERS
   - docker-compose down
-  # BREAKDOWN
   - docker rm $(docker ps -a -q) -f
   - rm -rf db
