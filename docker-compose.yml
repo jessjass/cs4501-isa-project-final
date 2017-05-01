@@ -120,4 +120,4 @@ selenium:
     - selenium-chrome:selenium-chrome
   volumes:
     - ./app/selenium:/app
-  command: bash -c "pip install selenium==2.48 && python sel_test.py"
+  command: bash -c "pip install selenium==2.48 && python docker_sel_test.py"

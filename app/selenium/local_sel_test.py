@@ -3,6 +3,7 @@ import os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+
 class FrontEndTests(unittest.TestCase):
 
     def setUp(self):
