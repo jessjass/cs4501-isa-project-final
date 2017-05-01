@@ -96,6 +96,27 @@ class FrontEndTests(unittest.TestCase):
 
 		assert "Sign In" in self.driver.page_source
 
+	def test060_createEvent(self):
+		self.test010_signIn()
+
+		dashButton = self.driver.find_element_by_xpath("/html/body/div/div[1]/div/div/p[2]/a")
+		dashButton.click()
+
+		createEventButton = self.driver.find_element_by_xpath("/html/body/div/div[2]/div/div/div[1]/div/a")
+		createEventButton.click()
+
+		eventTitle = self.driver.find_element_by_xpath("//*[@id=\"id_title\"]")
+		eventTitle.send_keys("Test event")
+
+		eventDate = self.driver.find_element_by_xpath("//*[@id=\"id_date\"]")
+		eventDate.send_keys("2017-05-02")
+
+		eventTime = self.driver.find_element_by_xpath("//*[@id=\"id_time\"]")
+		eventTime.send_keys("14:00:00")
+
+		
+
+
 	def tearDown(self):
 		self.driver.quit()
 		pass
