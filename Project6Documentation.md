@@ -96,5 +96,10 @@ jmeter:
 ```
 We created a duplicate of the local-perf-test.jmx file with the HTTP Default settings configured to test on the lb container (haproxy).
 
+### Performance Analysis
+#### Testing Web Application Locally
+It was fun to mess with the number of threads (users), X, and ramp-up period (in secs), Y, to see how well our app could handle X requests in Y seconds. If Y < X, we ran into a bunch of errors, especially in the create event and search events (probably due to the images). To get 0.00% rate of error, Y had to be roughly 3X. There was about a 20.00% error rate with Y being around 2X.
+#### Testing Web Application Digital Ocean
+
 ## Hosting on Digital Ocean
 You can view our hosted app [here.](http://107.170.79.157:8000/)
