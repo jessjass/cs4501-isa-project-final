@@ -88,7 +88,7 @@ jmeter:
   image: hauptmedia/jmeter
   container_name: jmeter
   links:
-    - web
+    - lb:lb
   volumes:
     - ./app/jmeter:/opt/jmeter/tests
   command: bash -c "bin/jmeter -n -t tests/docker-local-perf-test.jmx -l tests/docker-local-perf-results.log"
