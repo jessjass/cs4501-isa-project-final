@@ -34,5 +34,9 @@ This will:
 ## Load Balancing with HAProxy
 ## Continuous Integration with Travis
 ## End-to-end Testing with Selenium
+We wrote end-to-end tests using Selenium and integrated them into Travis CI by setting up a standalone Chrome remote driver (selenium-chrome), using one of Selenium's available docker containers. You can find more information [here.](https://github.com/SeleniumHQ/docker-selenium)
 ## Performance Testing with JMeter
+We decided to implement performance testing with JMeter to see how fast our application would scale, both on the DigitalOcean and running locally. 
+
 ## Hosting on Digital Ocean
+You can view our hosted app [here.](http://107.170.79.157:8000/)
