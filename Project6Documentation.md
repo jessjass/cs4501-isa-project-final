@@ -37,9 +37,27 @@ This will:
 We wrote end-to-end tests using Selenium and integrated them into Travis CI by setting up a standalone Chrome remote driver (selenium-chrome), using one of Selenium's available docker containers. You can find more information [here.](https://github.com/SeleniumHQ/docker-selenium)
 ## Performance Testing with JMeter
 We decided to implement performance testing with JMeter to see how fast our application would scale, both on the DigitalOcean and running locally. 
+### Test case overview
+Go to the jmeter directory and with JMeter installed, you can open up the test file with the JMeter GUI via:
+```
+jmeter -t local-perf-test.jmx
+```
+* Users Config & Events Config
+  - I created two config csv files for Users and Events that contain the form-data needed for logging in a user and creating an event.
+* HTTP Cookie Manager
+  - Allows for sessions to persist throughout performance test
+* HTTP Request Defaults
+  - Sets up base url for all HTTP requests (localhost:8000 for local test and lb:8000 for docker tests)
+* Various HTTP Request Samplers
+  - These were used to set up a user's interaction (end-to-end) in the JMeter tests. 
+  - First, we test the performance of accessing the home page and sign-in page.
+  - Then, we sign the user in once during each iteration.
+  - After, we perform various actions on the site, like accessing user dashboard, creating an event, and searching.
+  - Finally, we log the user out once during each iteration.
+
 ### To run the tests with application running locally
 ```
-jmeter -n -t local-perf-test.jmx -l local-perf-results.log
+./run_local_perf.sh
 ```
 Example output from running local jmeter tests:
 ```
@@ -48,7 +66,16 @@ summary +     21 in 00:00:05 =    3.8/s Avg:   136 Min:    19 Max:   330 Err:   
 summary =     55 in 00:00:18 =    3.1/s Avg:   126 Min:    17 Max:   330 Err:     0 (0.00%)
 Tidying up ...    @ Wed May 03 14:33:36 EDT 2017 (1493836416755)
 ```
-### How the JMeter tests run with Docker containers:
+You can view results of the local perf test as a csv in local-perf-results-summary.csv or view the web interface by:
+```
+cd local-perf-results
+open index.html
+```
+When you're done viewing the results, be sure to clean before running another test locally (clean_local_perf.sh is in app/jmeter).
+```
+./clean_local_perf.sh
+```
+### How the JMeter tests are run in the Docker container:
 ```
 jmeter:
   image: hauptmedia/jmeter
@@ -59,7 +86,7 @@ jmeter:
     - ./app/jmeter:/opt/jmeter/tests
   command: bash -c "bin/jmeter -n -t tests/docker-local-perf-test.jmx -l tests/docker-local-perf-results.log"
 ```
-
+We created a duplicate of the local-perf-test.jmx file with the HTTP Default settings configured to test on the lb container (haproxy).
 
 ## Hosting on Digital Ocean
 You can view our hosted app [here.](http://107.170.79.157:8000/)
