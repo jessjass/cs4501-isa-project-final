@@ -147,10 +147,10 @@ We created a duplicate of the local-perf-test.jmx file with the HTTP Default set
 ### Performance Analysis
 
 #### Testing Web Application Locally
-It was fun to mess with the number of threads (users), X, and ramp-up period (in secs), Y, to see how well our app could handle X requests in Y seconds. If Y < X, we ran into a bunch of errors, especially in the create event and search events (probably due to the images). To get 0.00% rate of error, Y had to be roughly 3X. There was about a 20.00% error rate with Y being around 2X.
+It was fun to mess around with the number of threads (users), X, and ramp-up period (in secs), Y, to see how well our app could handle X requests in Y seconds. If Y < X, we received a higher error rate, especially in the create event and search event requests (probably due to the image content). To get rate of error of 0.00%, Y had to be roughly 3X. With Y being around 2X, there was about a 20.00% error rate.
 
 #### Testing Web Application DigitalOcean
-DigitalOcean had similar results except it needed a larger ramp-up period. For X users, a ramp-up period of 5X resulted in an error rate of 0.00%. When the Y = 4X, there was an error rate of about 15.00%. The major bottleneck again was in event search and create events, so this may have to do with the image content but I'm not entirely sure.
+DigitalOcean had similar results except a larger ramp-up period was needed to reduce the error rate. For X users, a ramp-up period (Y) of 5X resulted in an error rate of 0.00%. When Y was about 4X, there was an error rate of roughly 15.00%. The major bottleneck again was in event search and create events. I think to improve performance so that our application can scale better, we would need to speed up how image content is delivered to the user. 
 
 ## Hosting on DigitalOcean
 You can view our hosted app [here.](http://107.170.79.157:8000/)
