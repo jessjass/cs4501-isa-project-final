@@ -33,7 +33,11 @@ This will:
 
 ## Load Balancing with HAProxy
 ## Continuous Integration with Travis
-## End-to-end Testing with Selenium
+Implementing continuous integration with Travis required building up the mysql containers in the docker-compose. As part of the before_script section, Travis builds up the application by creating a db directory, building the mysql and mysql-cmdline containers, and then composing the remaining containers. 
+
+There were lots of challenges getting Travis CI up and running due to setting the up the db containers, escaping special characters like '$', and setting up the correct user permissions. It was pretty cool to see the green light once it started working!
+
+## E2E Testing with Selenium
 We wrote end-to-end tests using Selenium and integrated them into Travis CI by setting up a standalone Chrome remote driver (selenium-chrome), using one of Selenium's available docker containers. You can find more information [here.](https://github.com/SeleniumHQ/docker-selenium)
 ## Performance Testing with JMeter
 We decided to implement performance testing with JMeter to see how fast our application would scale, both on the DigitalOcean and running locally. 
@@ -55,7 +59,7 @@ jmeter -t local-perf-test.jmx
   - After, we perform various actions on the site, like accessing user dashboard, creating an event, and searching.
   - Finally, we log the user out once during each iteration.
 
-### To run the tests with application running locally
+### To run the tests with application running locally and generate reports
 ```
 ./run_local_perf.sh
 ```
@@ -76,6 +80,8 @@ When you're done viewing the results, be sure to clean before running another te
 ./clean_local_perf.sh
 ```
 ### How the JMeter tests are run in the Docker container:
+
+JMeter Docker container in docker-compose.yml:
 ```
 jmeter:
   image: hauptmedia/jmeter
