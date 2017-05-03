@@ -32,6 +32,7 @@ This will:
 * Remove the existing database directory
 
 ## Load Balancing with HAProxy
+
 ## Continuous Integration with Travis
 Implementing continuous integration with Travis required building up the mysql containers in the docker-compose. As part of the before_script section, Travis builds up the application by creating a db directory, building the mysql and mysql-cmdline containers, and then composing the remaining containers. 
 
@@ -40,7 +41,44 @@ The main script runs the unit tests in the models container and E2E tests in the
 There were lots of challenges getting Travis CI up and running due to setting the up the db containers, escaping special characters like '$', and setting up the correct user permissions. It was pretty cool to see the green light once it started working!
 
 ## E2E Testing with Selenium
+
+### Integrating Selenium E2E Tests with Travis CI
 We wrote end-to-end tests using Selenium and integrated them into Travis CI by setting up a standalone Chrome remote driver (selenium-chrome), using one of Selenium's available docker containers. You can find more information [here.](https://github.com/SeleniumHQ/docker-selenium)
+
+Docker containers:
+```
+selenium-chrome:
+  image: selenium/standalone-chrome
+  container_name: selenium-chrome
+  links:
+    - lb:lb
+  ports:
+    - "4444:4444"
+
+selenium:
+  image: tp33/django
+  container_name: selenium
+  links:
+    - lb:lb
+    - selenium-chrome:selenium-chrome
+  volumes:
+    - ./app/selenium:/app
+  command: bash -c "pip install selenium==2.48 && python docker_sel_test.py"
+```
+
+Here is the set up function in docker_sel_test.py:
+```
+def setUp(self):
+    self.driver = webdriver.Remote(
+        command_executor='http://selenium-chrome:4444/wd/hub/',
+        desired_capabilities=DesiredCapabilities.CHROME
+    ) 
+    self.driver.implicitly_wait(30)
+    self.driver.maximize_window()
+    self.driver.get("http://lb")
+```
+__References:__ I used this source as a reference where a selenium remote driver is implemented for testing a Ruby application, [link](http://underthehood.meltwater.com/blog/2016/11/09/using-docker-with-selenium-server-to-run-your-browser-tests/). It was pretty helpful in figuring out how to integrate E2E tests with Travis CI.
+
 ## Performance Testing with JMeter
 We decided to implement performance testing with JMeter to see how fast our application would scale, both on the DigitalOcean and running locally. 
 ### Test case overview
@@ -81,6 +119,16 @@ When you're done viewing the results, be sure to clean before running another te
 ```
 ./clean_local_perf.sh
 ```
+### To run the tests on app hosted on DigitalOcean
+Same process as above except use this script to run
+```
+./run_digital_ocean_perf.sh
+```
+and this to clean
+```
+./clean_digital_ocean_perf.sh
+```
+
 ### How the JMeter tests are run in the Docker container:
 
 JMeter Docker container in docker-compose.yml:
@@ -97,9 +145,12 @@ jmeter:
 We created a duplicate of the local-perf-test.jmx file with the HTTP Default settings configured to test on the lb container (haproxy).
 
 ### Performance Analysis
+
 #### Testing Web Application Locally
 It was fun to mess with the number of threads (users), X, and ramp-up period (in secs), Y, to see how well our app could handle X requests in Y seconds. If Y < X, we ran into a bunch of errors, especially in the create event and search events (probably due to the images). To get 0.00% rate of error, Y had to be roughly 3X. There was about a 20.00% error rate with Y being around 2X.
-#### Testing Web Application Digital Ocean
 
-## Hosting on Digital Ocean
+#### Testing Web Application DigitalOcean
+DigitalOcean had similar results except it needed a larger ramp-up period. For X users, a ramp-up period of 5X resulted in an error rate of 0.00%. When the Y = 4X, there was an error rate of about 15.00%. The major bottleneck again was in event search and create events, so this may have to do with the image content but I'm not entirely sure.
+
+## Hosting on DigitalOcean
 You can view our hosted app [here.](http://107.170.79.157:8000/)
