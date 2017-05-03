@@ -124,8 +124,7 @@ class FrontEndTests(unittest.TestCase):
         # send_keys needs the full file path to the picture
         # there are two slashes to escape the backslash used in windows file paths
         eventPic = self.driver.find_element_by_xpath("//*[@id=\"id_image\"]")
-        eventPic.send_keys(os.path.dirname(os.path.realpath(
-            __file__)) + "\\butterfly-wallpaper-5875-6202-hd-wallpapers.jpg")  # gets current directory and adds the picture name to end
+        eventPic.send_keys("butterfly-wallpaper-5875-6202-hd-wallpapers.jpg")  # gets current directory and adds the picture name to end
         # eventPic.send_keys("C:\\Users\\Jessi\\Desktop\\test_webdriver\\butterfly-wallpaper-5875-6202-hd-wallpapers.jpg")
 
         createButton = self.driver.find_element_by_xpath("/html/body/div/div/div/div/div[2]/form/div[7]/button")
