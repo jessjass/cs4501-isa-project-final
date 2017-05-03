@@ -77,7 +77,7 @@ def setUp(self):
     self.driver.maximize_window()
     self.driver.get("http://lb")
 ```
-__References:__ I used this source as a reference where a selenium remote driver is implemented for testing a Ruby application, [link](http://underthehood.meltwater.com/blog/2016/11/09/using-docker-with-selenium-server-to-run-your-browser-tests/). It was pretty helpful in figuring out how to integrate E2E tests with Travis CI.
+__References:__ I used [this](http://underthehood.meltwater.com/blog/2016/11/09/using-docker-with-selenium-server-to-run-your-browser-tests/) as a reference where a selenium remote driver is implemented for executing E2E tests written in Ruby. It was pretty helpful in figuring out how to integrate E2E tests with Travis CI.
 
 ## Performance Testing with JMeter
 We decided to implement performance testing with JMeter to see how fast our application would scale, both on the DigitalOcean and running locally. 
