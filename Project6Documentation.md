@@ -35,6 +35,8 @@ This will:
 ## Continuous Integration with Travis
 Implementing continuous integration with Travis required building up the mysql containers in the docker-compose. As part of the before_script section, Travis builds up the application by creating a db directory, building the mysql and mysql-cmdline containers, and then composing the remaining containers. 
 
+The main script runs the unit tests in the models container and E2E tests in the selenium container. 
+
 There were lots of challenges getting Travis CI up and running due to setting the up the db containers, escaping special characters like '$', and setting up the correct user permissions. It was pretty cool to see the green light once it started working!
 
 ## E2E Testing with Selenium
@@ -51,7 +53,7 @@ jmeter -t local-perf-test.jmx
 * HTTP Cookie Manager
   - Allows for sessions to persist throughout performance test
 * HTTP Request Defaults
-  - Sets up base url for all HTTP requests (localhost:8000 for local test and lb:8000 for docker tests)
+  - Sets up base url for all HTTP requests (localhost:8000 for local test and lb:80 for docker tests)
 * Various HTTP Request Samplers
   - These were used to set up a user's interaction (end-to-end) in the JMeter tests. 
   - First, we test the performance of accessing the home page and sign-in page.
