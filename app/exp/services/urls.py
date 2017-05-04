@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^v1/signout/$', views.signOut),
     url(r'^v1/checkUser/$', views.checkUserAuth),
     url(r'^v1/user/dashboard/(?P<user_id>[0-9]+)/$', views.userDashboard),
-    url(r'^v1/event/search/$', views.searchEvent)
+    url(r'^v1/event/search/$', views.searchEvent),
+    url(r'^v1/event/all/$', views.allEvent),
 ]

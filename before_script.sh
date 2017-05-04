@@ -11,6 +11,6 @@ docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'CRE
 docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'GRANT ALL ON cs4501.* TO \"www\"@\"%\";' "
 docker exec -it mysql-cmdline bash -c "mysql -u root -p'\$3cureUS' -h db -e 'GRANT ALL ON test_cs4501.* TO \"www\"@\"%\";' "
 docker-compose up -d models exp web web2 kafka es batch lb selenium-chrome
-sleep 10
-docker-compose up jmeter
-docker-compose up selenium
+#sleep 10
+#docker-compose up jmeter
+#docker-compose up selenium
