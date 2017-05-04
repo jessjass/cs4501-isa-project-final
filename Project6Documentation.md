@@ -32,8 +32,13 @@ This will:
 * Remove the existing database directory
 
 ## Load Balancing with HAProxy
+HAProxy was used in order to set up a load balancer between 2 web containers. To create the load balancer, a new container called "lb" was created and mounted on top of the batch directory. This directory contained the haproxy.cfg file which defined the properties of the load balancer. It currently uses a round-robin algorithm to load balance requests between two different web containers. In order to make sure this was working we also set up papertrail account in order to see requests. As we can see below, each requests switches between web1 and web2.
 
+![Alt text](./HaproxyLogs.png?raw=true "Haproxy Logs")
 ## Continuous Integration with Travis
+
+Travis Badge: [![Build Status](https://travis-ci.org/johnmourad/cs4501-isa-project-final.svg?branch=master)](https://travis-ci.org/johnmourad/cs4501-isa-project-final)
+
 Implementing continuous integration with Travis required building up the mysql containers in the docker-compose. As part of the before_script section, Travis builds up the application by creating a db directory, building the mysql and mysql-cmdline containers, and then composing the remaining containers. 
 
 The main script runs the unit tests in the models container and E2E tests in the selenium container. 
@@ -77,7 +82,7 @@ def setUp(self):
     self.driver.maximize_window()
     self.driver.get("http://lb")
 ```
-__References:__ I used this source as a reference where a selenium remote driver is implemented for testing a Ruby application, [link](http://underthehood.meltwater.com/blog/2016/11/09/using-docker-with-selenium-server-to-run-your-browser-tests/). It was pretty helpful in figuring out how to integrate E2E tests with Travis CI.
+__References:__ I used [this](http://underthehood.meltwater.com/blog/2016/11/09/using-docker-with-selenium-server-to-run-your-browser-tests/) as a reference where a selenium remote driver is implemented for executing E2E tests written in Ruby. It was pretty helpful in figuring out how to integrate E2E tests with Travis CI.
 
 ## Performance Testing with JMeter
 We decided to implement performance testing with JMeter to see how fast our application would scale, both on the DigitalOcean and running locally. 
@@ -153,4 +158,4 @@ It was fun to mess around with the number of threads (users), X, and ramp-up per
 DigitalOcean had similar results except a larger ramp-up period was needed to reduce the error rate. For X users, a ramp-up period (Y) of 5X resulted in an error rate of 0.00%. When Y was about 4X, there was an error rate of roughly 15.00%. The major bottleneck again was in event search and create events. I think to improve performance so that our application can scale better, we would need to speed up how image content is delivered to the user. 
 
 ## Hosting on DigitalOcean
-You can view our hosted app [here.](http://107.170.79.157:8000/)
+You can view our hosted app [here.](http://107.170.79.157)
