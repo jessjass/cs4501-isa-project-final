@@ -36,6 +36,9 @@ HAProxy was used in order to set up a load balancer between 2 web containers. To
 
 ![Alt text](./HaproxyLogs.png?raw=true "Haproxy Logs")
 ## Continuous Integration with Travis
+
+Travis Badge: [![Build Status](https://travis-ci.org/johnmourad/cs4501-isa-project-final.svg?branch=master)](https://travis-ci.org/johnmourad/cs4501-isa-project-final)
+
 Implementing continuous integration with Travis required building up the mysql containers in the docker-compose. As part of the before_script section, Travis builds up the application by creating a db directory, building the mysql and mysql-cmdline containers, and then composing the remaining containers. 
 
 The main script runs the unit tests in the models container and E2E tests in the selenium container. 
