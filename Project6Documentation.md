@@ -32,7 +32,9 @@ This will:
 * Remove the existing database directory
 
 ## Load Balancing with HAProxy
+HAProxy was used in order to set up a load balancer between 2 web containers. To create the load balancer, a new container called "lb" was created and mounted on top of the batch directory. This directory contained the haproxy.cfg file which defined the properties of the load balancer. It currently uses a round-robin algorithm to load balance requests between two different web containers. In order to make sure this was working we also set up papertrail account in order to see requests. As we can see below, each requests switches between web1 and web2.
 
+![Alt text](./HaproxyLogs.png?raw=true "Haproxy Logs")
 ## Continuous Integration with Travis
 Implementing continuous integration with Travis required building up the mysql containers in the docker-compose. As part of the before_script section, Travis builds up the application by creating a db directory, building the mysql and mysql-cmdline containers, and then composing the remaining containers. 
 
@@ -153,4 +155,4 @@ It was fun to mess around with the number of threads (users), X, and ramp-up per
 DigitalOcean had similar results except a larger ramp-up period was needed to reduce the error rate. For X users, a ramp-up period (Y) of 5X resulted in an error rate of 0.00%. When Y was about 4X, there was an error rate of roughly 15.00%. The major bottleneck again was in event search and create events. I think to improve performance so that our application can scale better, we would need to speed up how image content is delivered to the user. 
 
 ## Hosting on DigitalOcean
-You can view our hosted app [here.](http://107.170.79.157:8000/)
+You can view our hosted app [here.](http://107.170.79.157)
