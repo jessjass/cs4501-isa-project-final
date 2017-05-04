@@ -12,7 +12,7 @@ class FrontEndTests(unittest.TestCase):
         self.driver.implicitly_wait(30)
         self.driver.maximize_window()
         # navigate to the application home page
-        self.driver.get("http://localhost:8000/")
+        self.driver.get("http://localhost:80/")
 
     def test010_signIn(self):
         signInButton = self.driver.find_element_by_xpath("//*[@id=\"bs-example-navbar-collapse-1\"]/ul[2]/li/a")
