@@ -298,3 +298,21 @@ def searchEvent(request):
 
             response_data['hits'] = hit_list
             return JsonResponse(response_data, safe=False)
+
+def allEvent(request):
+    response_data = {}
+
+    if request.method == 'GET':
+        try:
+            resp = requests.get(models_api + '/api/v1/event')
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({"error": e}, safe=False)
+        else:
+            events = resp.json()['event_list']
+            events_list = []
+            for e in events:
+                image_source = get_event_image(str(e['pk']))
+                events_list.append([e, image_source])
+
+            response_data['events_list'] = events_list
+            return JsonResponse(response_data, safe=False)

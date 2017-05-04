@@ -356,3 +356,18 @@ def searchEvents(request, user):
                 return render(request, 'search_events.html', context)
         else:
             return render(request, 'search_events.html', context)
+
+@login_required
+def allEvents(request, user):
+    context = {}
+    if request.method == 'GET':
+        context['auth'] = user['user'][0]['fields']
+        try:
+            resp = requests.get(exp_api + '/api/v1/event/all/')
+        except requests.exceptions.RequestException as e:
+            return HttpResponse(e)
+        else:
+
+            events = resp.json()['events_list']
+            context['events_list'] = events
+            return render(request, 'allEvents.html', context)
