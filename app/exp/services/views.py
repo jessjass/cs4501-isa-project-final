@@ -116,6 +116,49 @@ def experienceDetail(request, exp_id):
 
         return JsonResponse(response_data, safe=False)
 
+def eventDetail(request, event_id):
+    response_data = {}
+    post_data = {}
+
+    if request.method == 'GET':
+        if 'auth' in request.COOKIES:
+            auth = request.COOKIES['auth']
+            post_data['token'] = auth
+
+        req = urllib.request.Request(models_api + '/api/v1/event/' + event_id + '/')
+        # userReq = urllib.request.Request(models_api + '/api/v1/user/1')
+
+        try:
+            resp_json = urllib.request.urlopen(req)
+            # userResp_json = urllib.request.urlopen(userReq)
+            userInfo = requests.post(models_api + '/api/v1/user/auth/', post_data)
+
+        except URLError as e:
+            # URLError
+            if hasattr(e, 'reason'):
+                response_data['result'] = "400"
+                response_data['message'] = 'We failed to reach a server. Reason: ' + e.reason
+            # HTTPError
+            elif hasattr(e, 'code'):
+                response_data['result'] = e.code  # error code
+                response_data['message'] = 'The server couldn\'t fulfill the request.'
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({"error": e}, safe=False)
+
+        else:
+            resp_json = resp_json.read().decode('utf-8')
+            # userResp_json = userResp_json.read().decode('utf-8')
+
+            resp = json.loads(resp_json)
+            # userResp = json.loads(userResp_json)
+            currentUser = userInfo.json()
+
+            response_data['result'] = "200"
+            response_data['message'] = "OK: Successful"
+            response_data['event'] = resp['event']
+            response_data['currentUser'] = currentUser
+
+        return JsonResponse(response_data, safe=False)
 
 def signUp(request):
     response_data = {}
