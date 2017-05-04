@@ -47,6 +47,8 @@ There were lots of challenges getting Travis CI up and running due to setting th
 
 ## E2E Testing with Selenium
 
+Front end tests were written using Selenium Webdriver. The tests were executed in the google chrome browser. Tests were create to test the main functionality of the web application including logging in, signing out, creating events, and searching. These tests were integrated with Travis CI as described in the next section.
+
 ### Integrating Selenium E2E Tests with Travis CI
 We wrote end-to-end tests using Selenium and integrated them into Travis CI by setting up a standalone Chrome remote driver (selenium-chrome), using one of Selenium's available docker containers. You can find more information [here.](https://github.com/SeleniumHQ/docker-selenium)
 
