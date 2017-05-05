@@ -158,6 +158,16 @@ def eventDetail(request, event_id):
             response_data['event'] = resp['event']
             response_data['currentUser'] = currentUser
 
+            user_id = currentUser['user'][0]['pk']
+            event_id = resp['event'][0]['pk']
+
+            producer = KafkaProducer(bootstrap_servers='kafka:9092')
+            event_click = {
+                'user_id': user_id,
+                'event_id': event_id,
+            }
+            producer.send('event_clicks', json.dumps(event_click).encode('utf-8'))
+
         return JsonResponse(response_data, safe=False)
 
 def signUp(request):
