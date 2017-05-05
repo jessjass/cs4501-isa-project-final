@@ -17,3 +17,4 @@ app/jmeter/jmeter.log
 app/jmeter/local-perf-results.log
 app/jmeter/docker-local-perf-results.log
 app/selenium/*.png
+app/batch/spark/*.log
