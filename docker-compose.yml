@@ -146,6 +146,7 @@ spark-master:
     - 8080:8080
   volumes:
     - ./app/spark:/tmp/data
+    - ./app/batch/spark:/tmp/data/logs
 
 spark-worker:
   image: gettyimages/spark
@@ -171,3 +172,4 @@ spark-worker:
     - 8081:8081
   volumes:
     - ./app/spark:/tmp/data
+    - ./app/batch/spark:/tmp/data/logs
