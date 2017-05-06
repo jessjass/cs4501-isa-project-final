@@ -10,7 +10,7 @@ import base64
 import json, os, hmac, datetime
 from django.conf import settings
 
-from .models import Event, Experience, User, Authenticator
+from .models import Event, Experience, User, Authenticator, EventRecommendation
 from .forms import EventForm, ExperienceForm, UserForm, UserFormUpdateExperience, UserFormUpdateEvent, \
     UserFormUpdateFriend, EventFormUpdate, UserFormCheckUser
 
@@ -635,3 +635,22 @@ def getUserByAuth(request):
                     response_data['message'] = 'OK: Successful'
                     response_data['user'] = json.loads(serializers.serialize("json", [current_user]))
                     return JsonResponse(response_data, safe=False)
+
+
+def getRecommendationByEventId(request, event_id):
+    if request.method == 'GET':
+        response_data = {}
+
+        try:
+           recommendation = EventRecommendation.objects.get(event_id=event_id)
+        except ObjectDoesNotExist:
+            response_data['result'] = '200'
+            response_data['message'] = 'OK: Successful - No recommendations'
+            response_data['event_recommendations'] = []
+        else:
+            response_data['result'] = '200'
+            response_data['message'] = 'OK: Successful - Recommendations exist'
+
+            event_recommendations = recommendation.recommended_events.split(",")
+            response_data['event_recommendations'] = event_recommendations
+        return JsonResponse(response_data, safe=False)

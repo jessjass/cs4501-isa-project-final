@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^v1/event/(?P<event_id>[0-9]+)/$', views.eventById),
+    url(r'^v1/event/recommendation/(?P<event_id>[0-9]+)/$', views.getRecommendationByEventId),
     url(r'^v1/event/image/(?P<event_id>[0-9]+)/$', views.eventImageById),
     url(r'^v1/event/experience/(?P<exp_id>[0-9]+)/$', views.eventByExpId),
     url(r'^v1/event/$', views.eventAll, name="event"),

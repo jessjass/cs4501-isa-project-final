@@ -19,8 +19,8 @@ models:
     container_name: models
     links:
       -  mysql:db
-#    ports:
-#      - "8001:8000"
+    ports:
+      - "8001:8000"
     volumes:
       -  ./app/models:/app
     command: bash -c "pip install requests && python manage.py makemigrations services && python manage.py migrate && python manage.py loaddata database.json && mod_wsgi-express start-server --url-alias /static static --working-directory ./ --reload-on-changes ./models/wsgi.py"
@@ -32,8 +32,8 @@ exp:
       - models
       - kafka:kafka
       - es:es
-#   ports:
-#      - "8002:8000"
+   ports:
+      - "8002:8000"
    volumes:
       - ./app/exp:/app
    command: bash -c "pip install requests && mod_wsgi-express start-server --working-directory ./ --reload-on-changes ./exp/wsgi.py"
