@@ -18,15 +18,3 @@ docker-compose up -d models exp web web2 kafka es batch lb
 #docker-compose up selenium
 
 docker-compose up -d spark-master spark-worker
-
-docker exec -it spark-master bash -c "apt-get update \
-&& apt-get install python3-dev libmysqlclient-dev -y \
-&& apt-get install python-pip -y \
-&& pip install mysqlclient \
-&& apt-get install python-mysqldb"
-
-docker exec -it spark-worker bash -c "apt-get update \
-&& apt-get install python3-dev libmysqlclient-dev -y \
-&& apt-get install python-pip -y \
-&& pip install mysqlclient \
-&& apt-get install python-mysqldb"
