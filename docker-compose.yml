@@ -126,6 +126,8 @@ spark-master:
   image: gettyimages/spark
   command: bin/spark-class org.apache.spark.deploy.master.Master -h spark-master
   container_name: spark-master
+  links:
+    -  mysql:db
   hostname: spark-master
   environment:
     MASTER: spark://spark-master:7077
@@ -161,6 +163,7 @@ spark-worker:
     SPARK_WORKER_WEBUI_PORT: 8081
   links:
     - spark-master
+    -  mysql:db
   expose:
     - 7012
     - 7013

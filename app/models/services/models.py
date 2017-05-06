@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class User(models.Model):
     firstName = models.CharField(max_length=20)
     lastName = models.CharField(max_length=20)
@@ -41,3 +40,8 @@ class Authenticator(models.Model):
     user_id = models.CharField(max_length=50)
     authenticator = models.CharField(max_length=255, primary_key=True, unique=True)
     date_created = models.DateTimeField(auto_now_add=True, blank=True)
+
+
+class EventRecommendation(models.Model):
+    event = models.ForeignKey(Event)
+    recommended_events = models.CharField(max_length=400)

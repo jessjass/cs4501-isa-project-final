@@ -1,5 +1,6 @@
 from pyspark import SparkContext
 import itertools
+import MySQLdb
 
 # Set up SparkContext
 sc = SparkContext("spark://spark-master:7077", "PopularItems")
@@ -58,11 +59,39 @@ event_to_reco_events = filtered_event_tuple_to_user_count.map(lambda x: x[0]).gr
 
 output = event_to_reco_events.collect()
 
-for event_id, event_list in output:
-    print("event_id: %s" % event_id)
-    for e in event_list:
-        print( " - reco event_id: %s" % e)
-
-
 # End SparkContext
 sc.stop()
+
+# Open database connection
+db = MySQLdb.connect("db", "root", "$3cureUS", "cs4501")
+
+# Set up SQL db cursor
+cursor = db.cursor()
+
+# Get version to db to test connection
+cursor.execute("SELECT VERSION()")
+data = cursor.fetchone()
+print("Database version : %s " % data)
+
+# Insert event recommendation item query
+insert_query = "INSERT INTO services_eventrecommendation (event_id, recommended_events) VALUES (%s, %s);"
+truncate_query = "TRUNCATE TABLE services_eventrecommendation;"
+
+cursor.execute(truncate_query)
+
+for event_id, event_list in output:
+
+    # Print output
+    print("event_id: %s" % event_id)
+    reco_list = ",".join(event_list)
+    print("reco_list %s" % reco_list)
+
+    # Insert recommendation item into db
+    try:
+        cursor.execute(insert_query, (event_id, reco_list))
+        db.commit()
+    except:
+        db.rollback()
+
+# Disconnect from server
+db.close()
