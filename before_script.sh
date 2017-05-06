@@ -18,3 +18,4 @@ docker-compose up -d models exp web web2 kafka es batch lb
 #docker-compose up selenium
 
 docker-compose up -d spark-master spark-worker
+./automate_spark.sh
