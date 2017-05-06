@@ -124,10 +124,7 @@ def experienceDetail(request, exp_id, user):
 @login_required
 def eventDetail(request, event_id, user):
     context = {}
-    # req = urllib.request.Request(exp_api + '/api/v1/experience/' + exp_id + '/')
-
     try:
-        # resp_json = urllib.request.urlopen(req)
         if 'auth' in request.COOKIES:
             authCookie = request.COOKIES['auth']
             cookie = dict(auth=authCookie)
@@ -137,8 +134,6 @@ def eventDetail(request, event_id, user):
     except URLError as e:
         context['event'] = []
     else:
-        # resp_json = resp_json.read().decode('utf-8')
-        # resp = json.loads(resp_json)
         resp = resp_json.json()
         context['event'] = resp['event'][0]
         if resp['currentUser']['result'] == '200':
@@ -147,6 +142,7 @@ def eventDetail(request, event_id, user):
             userData['firstName'] = currentUser['firstName']
             userData['lastName'] = currentUser['lastName']
             context['auth'] = userData
+        context['event_recommendations'] = resp['event_recommendations']
     return render(request, 'event_detail.html', context)
 
 @anonymous_user
@@ -397,4 +393,4 @@ def allEvents(request, user):
 
             events = resp.json()['events_list']
             context['events_list'] = events
-            return render(request, 'allEvents.html', context)
+            return render(request, 'all_events.html', context)

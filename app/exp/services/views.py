@@ -116,6 +116,7 @@ def experienceDetail(request, exp_id):
 
         return JsonResponse(response_data, safe=False)
 
+
 def eventDetail(request, event_id):
     response_data = {}
     post_data = {}
@@ -157,6 +158,25 @@ def eventDetail(request, event_id):
             response_data['message'] = "OK: Successful"
             response_data['event'] = resp['event']
             response_data['currentUser'] = currentUser
+
+            try:
+                reco_req = requests.get(models_api + '/api/v1/event/recommendation/' + event_id + '/')
+            except requests.exceptions.RequestException as e:
+                response_data['event_recommendations'] = []
+            else:
+                reco_resp = reco_req.json()
+                event_recommendation_ids = reco_resp['event_recommendations']
+
+                event_recommendations = []
+
+                for event_rec_id in event_recommendation_ids:
+                    reco_event_req = requests.get(models_api + '/api/v1/event/' + event_rec_id + '/')
+                    reco_event_resp = reco_event_req.json()
+                    image_source = get_event_image(str(event_rec_id))
+
+                    event_recommendations.append([reco_event_resp['event'][0], image_source])
+
+                response_data['event_recommendations'] = event_recommendations
 
             user_id = currentUser['user'][0]['pk']
             event_id = resp['event'][0]['pk']

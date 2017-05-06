@@ -85,6 +85,10 @@ body {
     border-color: rgba(255, 255, 255, 0.5);
 }
 
+.event-recommendations {
+    padding-top: 100px !important;
+}
+
 .navbar-search {
     background-color: #fff;
     height: 35px;
