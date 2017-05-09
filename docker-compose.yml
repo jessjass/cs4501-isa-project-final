@@ -84,6 +84,15 @@ batch:
       - ./app/batch:/app
    command: bash -c "python batch.py"
 
+spark-batch:
+  image: tp33/django
+  container_name: spark-batch
+  links:
+    - kafka:kafka
+  volumes:
+      - ./app/spark:/app
+  command: bash -c "python spark-batch.py"
+
 jmeter:
   image: hauptmedia/jmeter
   container_name: jmeter
@@ -127,7 +136,7 @@ spark-master:
   command: bin/spark-class org.apache.spark.deploy.master.Master -h spark-master
   container_name: spark-master
   links:
-    -  mysql:db
+    - mysql:db
   hostname: spark-master
   environment:
     MASTER: spark://spark-master:7077
@@ -148,7 +157,6 @@ spark-master:
     - 8080:8080
   volumes:
     - ./app/spark:/tmp/data
-    - ./app/batch/spark:/tmp/data/logs
 
 spark-worker:
   image: gettyimages/spark
@@ -163,7 +171,7 @@ spark-worker:
     SPARK_WORKER_WEBUI_PORT: 8081
   links:
     - spark-master
-    -  mysql:db
+    - mysql:db
   expose:
     - 7012
     - 7013
@@ -175,4 +183,3 @@ spark-worker:
     - 8081:8081
   volumes:
     - ./app/spark:/tmp/data
-    - ./app/batch/spark:/tmp/data/logs

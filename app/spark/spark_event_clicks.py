@@ -50,8 +50,8 @@ print("Database version : %s " % data)
 
 # Insert event recommendation item query
 insert_query = "INSERT INTO services_eventrecommendation (event_id, recommended_events) VALUES (%s, %s);"
-truncate_query = "TRUNCATE TABLE services_eventrecommendation;"
 
+truncate_query = "TRUNCATE TABLE services_eventrecommendation;"
 cursor.execute(truncate_query)
 
 for event_id, event_list in output:
